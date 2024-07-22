@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
       <link rel="stylesheet" href="/css/general.css">
       <link rel="stylesheet" href="/css/shared.css">
@@ -69,8 +69,8 @@
         </div>
       </main>
       <footer>
-        <a href="b-side.html"> <button>Recipe</button>
-        <a href="b-side.html"> <button>Order</button>
+        <a th:href="@{/settings}"> <button>Recipe</button>
+        <a th:href="@{/settings}"> <button>Order</button>
       </footer>
   </body>
 </html>
