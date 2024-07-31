@@ -1,23 +1,27 @@
-CREATE TABLE ingredients(
+CREATE TABLE CURRENT_INGREDIENTS(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL,
+    count INT NOT NULL
 );
 
-INSERT INTO ingredients (name) VALUES ('egg');
-INSERT INTO ingredients (name) VALUES ('milk');
-INSERT INTO ingredients (name) VALUES ('flour');
-INSERT INTO ingredients (name) VALUES ('sugar');
-INSERT INTO ingredients (name) VALUES ('butter');
-INSERT INTO ingredients (name) VALUES ('salt');
-INSERT INTO ingredients (name) VALUES ('pepper');
-INSERT INTO ingredients (name) VALUES ('onion');
-INSERT INTO ingredients (name) VALUES ('garlic');
-INSERT INTO ingredients (name) VALUES ('tomato');
-INSERT INTO ingredients (name) VALUES ('cheese');
-INSERT INTO ingredients (name) VALUES ('chicken');
-INSERT INTO ingredients (name) VALUES ('beef');
-INSERT INTO ingredients (name) VALUES ('pork');
-INSERT INTO ingredients (name) VALUES ('fish');
-INSERT INTO ingredients (name) VALUES ('shrimp');
-INSERT INTO ingredients (name) VALUES ('rice');
-INSERT INTO ingredients (name) VALUES ('noodle');
+CREATE TABLE SAVED_INGREDIENTS(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    orderValue INT NOT NULL
+    -- FOREIGN KEY (previousId) REFERENCES SAVED_INGREDIENTS(id)
+);
+
+INSERT INTO CURRENT_INGREDIENTS (name, count) VALUES ('egg', 1);
+INSERT INTO CURRENT_INGREDIENTS (name, count) VALUES ('sugar', 3);
+INSERT INTO CURRENT_INGREDIENTS (name, count) VALUES ('butter', 1);
+INSERT INTO CURRENT_INGREDIENTS (name, count) VALUES ('flour', 5);
+
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('egg', 1);
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('flour', 2);
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('milk', 3);
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('sugar', 4);
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('butter', 5);
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('salt', 6);
+INSERT INTO SAVED_INGREDIENTS (name, orderValue) VALUES ('pepper', 7);
+
+

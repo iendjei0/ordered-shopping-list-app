@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        
+    </head>
+
+    <body>
+      <div th:fragment="ingredients-list" th:each="ingredient : ${ingredients}" th:id="'ingredient-' + ${ingredient.id}">
+          <span th:text="${ingredient.name}"></span>
+          &#8226;
+          <span th:text="${ingredient.count}"></span>
+          <button>+</button>
+          <button onclick="deleteIngredient('${ingredient.id}')">-</button>
+      </div>
+    </body>
+</html>

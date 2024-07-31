@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.osla.repository.IngredientRepository;
+import com.osla.repository.CurrentIngredientRepository;
 
 
 
@@ -14,7 +14,7 @@ import com.osla.repository.IngredientRepository;
 public class TemplateController {
 
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private CurrentIngredientRepository ingredientRepository;
 
     @GetMapping("/")
     public String getHomePage() {
