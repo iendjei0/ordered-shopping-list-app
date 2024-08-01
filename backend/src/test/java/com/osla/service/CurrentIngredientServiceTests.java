@@ -1,5 +1,6 @@
-package com.osla;
+package com.osla.service;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 
@@ -13,10 +14,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.osla.model.CurrentIngredient;
 import com.osla.repository.CurrentIngredientRepository;
-import com.osla.service.CurrentIngredientService;
 
 @SpringBootTest
-public class SavedIngredientTests {
+public class CurrentIngredientServiceTests {
 
     @MockBean
 	private CurrentIngredientRepository currentIngredientRepository;
@@ -26,22 +26,14 @@ public class SavedIngredientTests {
 
 	@Test
 	public void getCurrentIngredients() {
-		CurrentIngredient ci1 = new CurrentIngredient();
-		ci1.setId(1);
-		ci1.setName("egg");
-		ci1.setCount(3);
-
-		CurrentIngredient ci2 = new CurrentIngredient();
-		ci2.setId(2);
-		ci2.setName("flour");
-		ci2.setCount(2);
-
-		CurrentIngredient ci3 = new CurrentIngredient();
-		ci3.setId(3);
-		ci3.setName("milk");
-		ci3.setCount(5);
-
-		List<CurrentIngredient> currentIngredients = Arrays.asList(ci1, ci2, ci3);
+		List<CurrentIngredient> currentIngredients = Arrays.asList(
+			CurrentIngredient.builder()
+				.id(1).name("egg").count(3).build(),
+			CurrentIngredient.builder()
+				.id(2).name("flour").count(2).build(),
+			CurrentIngredient.builder()
+				.id(3).name("milk").count(5).build()
+		);
 
 		given(currentIngredientRepository.findAll()).willReturn(currentIngredients);
 
@@ -59,4 +51,12 @@ public class SavedIngredientTests {
 		}
 		return true;
 	}
+
+	@Test
+	public void getCurrentIngredientsIfThereAreNone() {
+		given(currentIngredientRepository.findAll()).willReturn(null);
+
+		assertNull(currentIngredientService.getCurrentIngredients());
+	}
+
 }
