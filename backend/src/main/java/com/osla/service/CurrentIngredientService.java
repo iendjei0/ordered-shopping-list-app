@@ -11,18 +11,39 @@ import com.osla.repository.CurrentIngredientRepository;
 @Service
 public class CurrentIngredientService {
     @Autowired
-    private CurrentIngredientRepository ingredientRepository;
+    private CurrentIngredientRepository currentIngredientRepository;
 
     public List<CurrentIngredient> getCurrentIngredients() {
-        return ingredientRepository.findAll();
+        return currentIngredientRepository.findAll();
     }
 
-    //addCurrentIngredient
-    //deleteCurrentIngredient
+    public void addCurrentIngredient(String name) {
+        currentIngredientRepository.save(
+            CurrentIngredient.builder()
+                .name(name)
+                .count(1).build());
+    }
 
-    //Maybe:
-    //incrementIngredientCount
-    //decrementIngredientCount
+    public void deleteCurrentIngredient(String name) {
+        CurrentIngredient ingredient = currentIngredientRepository.findByName(name);
+        currentIngredientRepository.delete(ingredient);
+    }
+
+    public void incrementCurrentIngredient(String name) {
+        CurrentIngredient ingredient = currentIngredientRepository.findByName(name);
+        int count = ingredient.getCount();
+        ingredient.setCount(++count);
+
+        currentIngredientRepository.save(ingredient);
+    }
+    
+    public void decrementCurrentIngredient(String name) {
+        CurrentIngredient ingredient = currentIngredientRepository.findByName(name);
+        int count = ingredient.getCount();
+        ingredient.setCount(--count);
+
+        currentIngredientRepository.save(ingredient);
+    }
 
     //ordered endpoint
     //getOrderedIngredients

@@ -1,10 +1,18 @@
 package com.osla.service;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.any;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -54,9 +62,60 @@ public class CurrentIngredientServiceTests {
 
 	@Test
 	public void getCurrentIngredientsIfThereAreNone() {
-		given(currentIngredientRepository.findAll()).willReturn(null);
+		given(currentIngredientRepository.findAll()).willReturn(Collections.emptyList());
 
-		assertNull(currentIngredientService.getCurrentIngredients());
+		assertEquals(Collections.emptyList(), currentIngredientService.getCurrentIngredients());
+	}
+
+	@Test
+	public void addCurrentIngredient() {
+		currentIngredientService.addCurrentIngredient("milk");
+
+		verify(currentIngredientRepository).save(
+			argThat(someIngredient -> 
+				someIngredient.getName().equals("milk") &&
+				someIngredient.getCount() == 1)
+		);
+	}
+
+	@Test
+	public void deleteCurrentIngredient() {
+		given(currentIngredientRepository.findByName("milk"))
+			.willReturn(CurrentIngredient.builder().name("milk").build());
+
+		currentIngredientService.deleteCurrentIngredient("milk");
+
+		verify(currentIngredientRepository).delete(
+			argThat(someIngredient -> someIngredient.getName().equals("milk"))
+		);
+	}
+
+	@Test
+	public void incrementCurrentIngredient() {
+		given(currentIngredientRepository.findByName("milk"))
+			.willReturn(CurrentIngredient.builder().name("milk").count(1).build());
+
+		int previousCount = currentIngredientRepository.findByName("milk").getCount();
+
+		currentIngredientService.incrementCurrentIngredient("milk");
+
+		verify(currentIngredientRepository).save(
+			argThat(someIngredient -> someIngredient.getCount() == previousCount+1)
+		);
+	}
+
+	@Test
+	public void decrementCurrentIngredient() {
+		given(currentIngredientRepository.findByName("milk"))
+			.willReturn(CurrentIngredient.builder().name("milk").count(3).build());
+
+		int previousCount = currentIngredientRepository.findByName("milk").getCount();
+
+		currentIngredientService.decrementCurrentIngredient("milk");
+
+		verify(currentIngredientRepository).save(
+			argThat(someIngredient -> someIngredient.getCount() == previousCount-1)
+		);
 	}
 
 }
