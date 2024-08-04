@@ -1,15 +1,10 @@
 package com.osla.service;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.any;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -117,5 +112,4 @@ public class CurrentIngredientServiceTests {
 			argThat(someIngredient -> someIngredient.getCount() == previousCount-1)
 		);
 	}
-
 }
