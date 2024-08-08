@@ -112,4 +112,11 @@ public class CurrentIngredientServiceTests {
 			argThat(someIngredient -> someIngredient.getCount() == previousCount-1)
 		);
 	}
+
+	@Test
+	public void getSummedOrderedIngredients() {
+		currentIngredientService.getSummedOrderedIngredients();
+
+		verify(currentIngredientRepository).getSummedOrderedIngredients();
+	}
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.osla.model.CurrentIngredient;
+import com.osla.model.OutputIngredient;
 import com.osla.repository.CurrentIngredientRepository;
 
 @Service
@@ -45,6 +46,7 @@ public class CurrentIngredientService {
         currentIngredientRepository.save(ingredient);
     }
 
-    //ordered endpoint
-    //getOrderedIngredients
+    public List<OutputIngredient> getSummedOrderedIngredients() {
+        return currentIngredientRepository.getSummedOrderedIngredients();
+    }
 }
