@@ -63,6 +63,13 @@ public class CurrentIngredientServiceTests {
 	}
 
 	@Test
+	public void findCurrentIngredient() {
+		currentIngredientService.findCurrentIngredient("milk");
+
+		verify(currentIngredientRepository).findByName("milk");
+	}
+
+	@Test
 	public void addCurrentIngredient() {
 		currentIngredientService.addCurrentIngredient("milk");
 

@@ -18,6 +18,10 @@ public class CurrentIngredientService {
         return currentIngredientRepository.findAll();
     }
 
+    public CurrentIngredient findCurrentIngredient(String name) {
+        return currentIngredientRepository.findByName(name);
+    }
+
     public void addCurrentIngredient(String name) {
         currentIngredientRepository.save(
             CurrentIngredient.builder()

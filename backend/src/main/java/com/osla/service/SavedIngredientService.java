@@ -20,6 +20,10 @@ public class SavedIngredientService {
         return savedIngredientRepository.findAll();
     }
 
+    public SavedIngredient findSavedIngredient(String name) {
+        return savedIngredientRepository.findByName(name);
+    }
+
     public void addSavedIngredient(String name) {
         savedIngredientRepository.save(SavedIngredient.builder()
             .name(name)

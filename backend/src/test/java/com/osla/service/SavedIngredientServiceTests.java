@@ -53,6 +53,13 @@ public class SavedIngredientServiceTests {
     }
 
     @Test
+    public void findSavedIngredient() {
+        savedIngredientService.findSavedIngredient("milk");
+
+        verify(savedIngredientRepository).findByName("milk");
+    }
+
+    @Test
     public void addSavedIngredient() {
         given(savedIngredientRepository.getNextOrder()).willReturn(10);
 
