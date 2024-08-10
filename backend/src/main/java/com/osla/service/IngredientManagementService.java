@@ -3,6 +3,8 @@ package com.osla.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.exceptions.IngredientNotFoundException;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -16,17 +18,22 @@ public class IngredientManagementService {
     
     @Transactional
     public void addIngredient(String name) {
-        if(savedIngredientService.findSavedIngredient(name) == null) {
+        try {
+            savedIngredientService.findSavedIngredient(name);
+        } catch (IngredientNotFoundException e) {
             savedIngredientService.addSavedIngredient(name);
         }
+
         currentIngredientService.addCurrentIngredient(name);
     }
 
     @Transactional
     public void deleteIngredient(String name) {
-        if(currentIngredientService.findCurrentIngredient(name) != null) {
+        try {
+            currentIngredientService.findCurrentIngredient(name);
             currentIngredientService.deleteCurrentIngredient(name);
-        }
+        } catch (IngredientNotFoundException e) { }
+        
         savedIngredientService.deleteSavedIngredient(name);
     }
 }

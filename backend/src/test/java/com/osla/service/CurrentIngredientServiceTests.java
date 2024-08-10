@@ -1,9 +1,11 @@
 package com.osla.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.exceptions.IngredientNotFoundException;
 import com.osla.model.CurrentIngredient;
 import com.osla.repository.CurrentIngredientRepository;
 
@@ -64,7 +67,20 @@ public class CurrentIngredientServiceTests {
 
 	@Test
 	public void findCurrentIngredient() {
+		given(currentIngredientRepository.findByName("milk")).willReturn(mock(CurrentIngredient.class));
+
 		currentIngredientService.findCurrentIngredient("milk");
+
+		verify(currentIngredientRepository).findByName("milk");
+	}
+
+	@Test
+	public void findCurrentIngredientNotExisting() {
+		given(currentIngredientRepository.findByName("milk")).willThrow(IngredientNotFoundException.class);
+
+		assertThrows(IngredientNotFoundException.class, () -> {
+			currentIngredientService.findCurrentIngredient("milk");
+		});
 
 		verify(currentIngredientRepository).findByName("milk");
 	}

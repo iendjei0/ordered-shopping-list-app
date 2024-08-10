@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.exceptions.IngredientNotFoundException;
 import com.osla.model.CurrentIngredient;
 import com.osla.model.SavedIngredient;
 
@@ -27,7 +28,7 @@ public class IngredientManagementServiceTests {
 
     @Test
     public void addNewIngredient() {
-        given(savedIngredientService.findSavedIngredient("milk")).willReturn(null);
+        given(savedIngredientService.findSavedIngredient("milk")).willThrow(IngredientNotFoundException.class);
 
         ingredientManagementService.addIngredient("milk");
 
@@ -47,7 +48,7 @@ public class IngredientManagementServiceTests {
 
     @Test
     public void deleteIngredient() {
-        given(currentIngredientService.findCurrentIngredient("milk")).willReturn(null);
+        given(currentIngredientService.findCurrentIngredient("milk")).willThrow(IngredientNotFoundException.class);
 
         ingredientManagementService.deleteIngredient("milk");
 

@@ -2,8 +2,10 @@ package com.osla.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.exceptions.IngredientNotFoundException;
 import com.osla.model.SavedIngredient;
 import com.osla.repository.SavedIngredientRepository;
 
@@ -54,10 +57,24 @@ public class SavedIngredientServiceTests {
 
     @Test
     public void findSavedIngredient() {
+        given(savedIngredientRepository.findByName("milk")).willReturn(mock(SavedIngredient.class));
+
         savedIngredientService.findSavedIngredient("milk");
 
         verify(savedIngredientRepository).findByName("milk");
     }
+
+    @Test
+    public void findSavedIngredientNotExisting() {
+        given(savedIngredientRepository.findByName("milk")).willThrow(IngredientNotFoundException.class);
+
+        assertThrows(IngredientNotFoundException.class, () -> {
+            savedIngredientService.findSavedIngredient("milk");
+        });
+
+        verify(savedIngredientRepository).findByName("milk");
+    }
+    
 
     @Test
     public void addSavedIngredient() {
