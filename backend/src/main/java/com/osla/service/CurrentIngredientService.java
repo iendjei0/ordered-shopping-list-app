@@ -47,7 +47,11 @@ public class CurrentIngredientService {
         int count = ingredient.getCount();
         ingredient.setCount(--count);
 
-        currentIngredientRepository.save(ingredient);
+        if(count == 0) {
+            currentIngredientRepository.save(ingredient);
+        } else {
+            currentIngredientRepository.delete(ingredient);
+        }
     }
 
     public List<OutputIngredient> getSummedOrderedIngredients() {

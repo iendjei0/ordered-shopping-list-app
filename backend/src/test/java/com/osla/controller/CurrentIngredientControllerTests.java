@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.osla.model.CurrentIngredient;
 import com.osla.service.CurrentIngredientService;
+import com.osla.service.IngredientManagementService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,8 +35,11 @@ public class CurrentIngredientControllerTests {
     @MockBean
     private CurrentIngredientService currentIngredientService;
 
-    @Test
-    public void getCurrentIngredientsEndpoint() throws Exception {
+    @MockBean
+    private IngredientManagementService ingredientManagementService;
+
+    @BeforeAll
+    public void initMocks() {
         List<CurrentIngredient> currentIngredients = Arrays.asList(
 			CurrentIngredient.builder()
 				.id(1).name("egg").count(3).build(),
@@ -45,6 +50,10 @@ public class CurrentIngredientControllerTests {
 		);
 
         given(currentIngredientService.getCurrentIngredients()).willReturn(currentIngredients);
+    }
+
+    @Test
+    public void getCurrentIngredientsEndpoint() throws Exception {
 
         MvcResult result = mockMvc.perform(get("/current"))
             .andExpect(status().isOk())
@@ -59,5 +68,4 @@ public class CurrentIngredientControllerTests {
         assertEquals("egg", doc.select("#ingredient-1 span").first().text());
         assertEquals("2", doc.select("#ingredient-2 span").get(1).text());
     }
-
 }
