@@ -2,12 +2,14 @@
 const outputElement = document.querySelector(".output");
 const inputElement = document.querySelector(".input input");
 const inputButtonElement = document.querySelector(".input button")
+const shoppingListElement = document.querySelector(".shopping-list")
+const createButtonElement = document.querySelector(".create-button button")
 
 
 //HTML calls
-function getCurrentIngredients() {
+function genericFetch(endpoint, method, elementToUpdate) {
   return (
-    fetch("/current", {method:"GET"})
+    fetch(endpoint, {method:method})
       .then(response => {
         if(!response.ok){
           return response.text().then(text => { 
@@ -17,64 +19,30 @@ function getCurrentIngredients() {
         return response.text();
       })
       .then(html => {
-        outputElement.innerHTML = html;
+        elementToUpdate.innerHTML = html;
       })
       .catch((error) => console.log(error))
   )
+}
+
+function getCurrentIngredients() {
+  return genericFetch("/current", "GET", outputElement) 
 }
 
 function addCurrentIngredient(name) {
-  return (
-    fetch(`/current/add/${name}`, {method:"POST"})
-      .then(response => {
-        if(!response.ok){
-          return response.text().then(text => { 
-            throw new Error(text || response.statusText);
-          });
-        }
-        return response.text();
-      })
-      .then(html => {
-        outputElement.innerHTML = html;
-      })
-      .catch((error) => console.log(error))
-  )
+  return genericFetch(`/current/add/${name}`, "POST", outputElement) 
 }
 
 function incrementCurrentIngredient(name) {
-  return (
-    fetch(`/current/increment/${name}`, {method:"PUT"})
-      .then(response => {
-        if(!response.ok){
-          return response.text().then(text => { 
-            throw new Error(text || response.statusText);
-          });
-        }
-        return response.text();
-      })
-      .then(html => {
-        outputElement.innerHTML = html;
-      })
-      .catch((error) => console.log(error))
-  )
+  return genericFetch(`/current/increment/${name}`, "PUT", outputElement) 
 }
 
 function decrementCurrentIngredient(name) {
-  return (
-    fetch(`/current/decrement/${name}`, {method:"PUT"})
-      .then(response => {
-        if(!response.ok){
-          return response.text().then(text => { 
-            throw new Error(text || response.statusText);
-          });
-        }
-        return response.text();
-      })
-      .then(html => {
-        outputElement.innerHTML = html;
-      })
-      .catch((error) => console.log(error))
-  )
+  return genericFetch(`/current/decrement/${name}`, "PUT", outputElement) 
+}
+
+function getShoppingList() {
+  return genericFetch("/current/processed", "GET", shoppingListElement)
 }
 
 //Listeners
@@ -84,10 +52,17 @@ inputElement.addEventListener("keydown", (event) => {
     inputElement.value = "";
   }
 })
+
 inputButtonElement.addEventListener("click", () => {
   addCurrentIngredient(inputElement.value);
   inputElement.value = "";
 })
+
+createButtonElement.addEventListener("click", () => {
+  getShoppingList()
+})
+
+console.log(shoppingListElement)
 
 //On start
 getCurrentIngredients();

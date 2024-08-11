@@ -116,4 +116,16 @@ public class CurrentIngredientControllerTests {
 
         verify(currentIngredientService).decrementCurrentIngredient("milk");
     }
+
+    @Test
+    public void getSummedOrderedIngredientsEndpoint() throws Exception {
+        MvcResult result = mockMvc.perform(get("/current/processed"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("text/html;charset=UTF-8"))
+            .andReturn();
+
+        // testHTMLOutput(result); TODO: custom version of this
+
+        verify(currentIngredientService).getSummedOrderedIngredients();
+    }
 }

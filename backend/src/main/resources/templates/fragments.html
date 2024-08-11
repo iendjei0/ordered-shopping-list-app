@@ -12,5 +12,11 @@
             <button th:onclick="incrementCurrentIngredient([[${ingredient.name}]])">+</button>
             <button th:onclick="decrementCurrentIngredient([[${ingredient.name}]])">-</button>
         </div>
+        
+        <div th:fragment="shopping-list" th:each="ingredient : ${ingredients}">
+            <span th:text="${ingredient.name}"></span>
+            &#8226;
+            <span th:text="${ingredient.count}"></span>
+        </div>
     </body>
 </html>

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.osla.model.CurrentIngredient;
+import com.osla.model.OutputIngredient;
 import com.osla.service.CurrentIngredientService;
 import com.osla.service.IngredientManagementService;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,13 +60,11 @@ public class CurrentIngredientController {
         currentIngredientService.decrementCurrentIngredient(name);
         return prepareCurrentIngredientsModel(model);
     }
-
-    // TODO: create a valid fragment for this endpoint 
-    //
-    // @GetMapping("/processed")
-    // public String getSummedOrderedIngredients(Model model) {
-    //     model.addAttribute("ingredients", currentIngredientService.getSummedOrderedIngredients());
-    //     return "fragments :: ingredients-list";
-    // }
+    
+    @GetMapping("/processed")
+    public String getSummedOrderedIngredients(Model model) {
+        model.addAttribute("ingredients", currentIngredientService.getSummedOrderedIngredients());
+        return "fragments :: shopping-list";
+    }
     
 }
