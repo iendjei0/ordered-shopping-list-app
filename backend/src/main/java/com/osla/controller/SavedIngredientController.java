@@ -1,13 +1,9 @@
 package com.osla.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.Spring;
-
-import org.mockito.internal.util.collections.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.osla.model.SavedIngredient;

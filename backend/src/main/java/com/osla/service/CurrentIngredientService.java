@@ -21,6 +21,7 @@ public class CurrentIngredientService {
         return currentIngredientRepository.findAll();
     }
 
+    //TODO: somehow find by id not name because of duplicates
     public CurrentIngredient findCurrentIngredient(String name) {
         CurrentIngredient ingredient = currentIngredientRepository.findByName(name);
         if(ingredient == null) throw new IngredientNotFoundException("Couldn't find ingredient \"" + name + "\"");
