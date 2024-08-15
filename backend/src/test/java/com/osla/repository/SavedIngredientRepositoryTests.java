@@ -128,6 +128,27 @@ public class SavedIngredientRepositoryTests {
         }
     }
 
-    
+    @Test
+    public void getOrderedIngredients() {
+        List<SavedIngredient> savedIngredients = Arrays.asList(
+            SavedIngredient.builder()
+                .name("milk").orderValue(3).build(),
+            SavedIngredient.builder()
+                .name("flour").orderValue(1).build(),
+            SavedIngredient.builder()
+                .name("butter").orderValue(4).build(),
+            SavedIngredient.builder()
+                .name("egg").orderValue(2).build()
+        );
+        savedIngredientRepository.saveAll(savedIngredients);
 
+        List<SavedIngredient> orderIngredients = savedIngredientRepository.getOrderedIngredients();
+
+        String[] namesOrdered = {"flour", "egg", "milk", "butter"};
+
+        for(int i = 0; i < orderIngredients.size(); i++) {
+            assertEquals(namesOrdered[i], orderIngredients.get(i).getName());
+        }
+    }
+    
 }

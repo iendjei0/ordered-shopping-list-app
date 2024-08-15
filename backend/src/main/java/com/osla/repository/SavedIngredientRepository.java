@@ -1,5 +1,7 @@
 package com.osla.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,5 +32,12 @@ public interface SavedIngredientRepository extends JpaRepository<SavedIngredient
             WHERE ing.orderValue > :givenOrder
             """)
     public void decrementOrderHigherThan(@Param("givenOrder") int givenOrder);
+
+    @Query("""
+            SELECT ing
+            FROM SavedIngredient ing
+            ORDER BY ing.orderValue
+            """)
+    public List<SavedIngredient> getOrderedIngredients();
 
 }

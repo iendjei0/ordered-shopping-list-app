@@ -58,4 +58,8 @@ public class SavedIngredientService {
         savedIngredientRepository.save(ingredient1);
         savedIngredientRepository.save(ingredient2);
     }
+
+    public List<SavedIngredient> getOrderedIngredients() {
+        return savedIngredientRepository.getOrderedIngredients();
+    }
 }

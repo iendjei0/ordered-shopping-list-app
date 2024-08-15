@@ -126,4 +126,11 @@ public class SavedIngredientServiceTests {
                 someIngredient.getOrderValue() == 4)
         );
     }
+
+    @Test
+    public void getOrderedIngredients() {
+        savedIngredientService.getOrderedIngredients();
+
+        verify(savedIngredientRepository).getOrderedIngredients();
+    }
 }

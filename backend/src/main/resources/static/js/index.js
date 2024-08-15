@@ -62,7 +62,6 @@ createButtonElement.addEventListener("click", () => {
   getShoppingList()
 })
 
-console.log(shoppingListElement)
 
 //On start
 getCurrentIngredients();

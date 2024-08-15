@@ -11,6 +11,7 @@ import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -45,7 +46,7 @@ public class CurrentIngredientControllerTests {
     @MockBean
     private IngredientManagementService ingredientManagementService;
 
-    @BeforeAll
+    @BeforeEach
     public void initMocks() {
         List<CurrentIngredient> currentIngredients = Arrays.asList(
 			CurrentIngredient.builder()
