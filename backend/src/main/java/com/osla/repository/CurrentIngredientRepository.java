@@ -12,7 +12,7 @@ import com.osla.model.OutputIngredient;
 
 @Repository
 public interface CurrentIngredientRepository extends JpaRepository<CurrentIngredient, Integer> {
-    public CurrentIngredient findByName(String name);
+    public List<CurrentIngredient> findByName(String name);
 
     @Query("""
             SELECT new com.osla.model.OutputIngredient(ci.name, SUM(ci.count))

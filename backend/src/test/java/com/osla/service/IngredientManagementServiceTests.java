@@ -14,6 +14,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.util.List;
+
 @SpringBootTest
 public class IngredientManagementServiceTests {
     
@@ -48,21 +50,21 @@ public class IngredientManagementServiceTests {
 
     @Test
     public void deleteIngredient() {
-        given(currentIngredientService.findCurrentIngredient("milk")).willThrow(IngredientNotFoundException.class);
+        given(currentIngredientService.findCurrentIngredients("milk")).willThrow(IngredientNotFoundException.class);
 
         ingredientManagementService.deleteIngredient("milk");
 
-        verify(currentIngredientService, never()).deleteCurrentIngredient("milk");
+        verify(currentIngredientService, never()).deleteCurrentIngredients("milk");
         verify(savedIngredientService).deleteSavedIngredient("milk");
     }
 
     @Test
     public void deleteIngredientWhichIsOnCurrentList() {
-        given(currentIngredientService.findCurrentIngredient("milk")).willReturn(mock(CurrentIngredient.class));
+        given(currentIngredientService.findCurrentIngredients("milk")).willReturn(mock(List.class));
 
         ingredientManagementService.deleteIngredient("milk");
 
-        verify(currentIngredientService).deleteCurrentIngredient("milk");
+        verify(currentIngredientService).deleteCurrentIngredients("milk");
         verify(savedIngredientService).deleteSavedIngredient("milk");
     }
 }

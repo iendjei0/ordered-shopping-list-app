@@ -30,8 +30,8 @@ public class IngredientManagementService {
     @Transactional
     public void deleteIngredient(String name) {
         try {
-            currentIngredientService.findCurrentIngredient(name);
-            currentIngredientService.deleteCurrentIngredient(name);
+            currentIngredientService.findCurrentIngredients(name);
+            currentIngredientService.deleteCurrentIngredients(name);
         } catch (IngredientNotFoundException e) { }
         
         savedIngredientService.deleteSavedIngredient(name);

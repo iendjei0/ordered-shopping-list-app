@@ -1,6 +1,7 @@
 package com.osla.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,17 @@ public class CurrentIngredientService {
         return currentIngredientRepository.findAll();
     }
 
-    //TODO: somehow find by id not name because of duplicates
-    public CurrentIngredient findCurrentIngredient(String name) {
-        CurrentIngredient ingredient = currentIngredientRepository.findByName(name);
-        if(ingredient == null) throw new IngredientNotFoundException("Couldn't find ingredient \"" + name + "\"");
-        return ingredient;
+    public List<CurrentIngredient> findCurrentIngredients(String name) {
+        List<CurrentIngredient> ingredients = currentIngredientRepository.findByName(name);
+        if(ingredients.isEmpty()) throw new IngredientNotFoundException("Couldn't find ingredient \"" + name + "\"");
+        return ingredients;
     }
+
+    public CurrentIngredient findCurrentIngredient(int id) {
+        Optional<CurrentIngredient> ingredient = currentIngredientRepository.findById(id);
+        if(!ingredient.isPresent()) throw new IngredientNotFoundException("Couldn't find ingredient \"" + id + "\"");
+        return ingredient.get();
+    } 
 
     @Transactional
     public void addCurrentIngredient(String name) {
@@ -37,14 +43,18 @@ public class CurrentIngredientService {
     }
 
     @Transactional
-    public void deleteCurrentIngredient(String name) {
-        CurrentIngredient ingredient = findCurrentIngredient(name);
-        currentIngredientRepository.delete(ingredient);
+    public void deleteCurrentIngredients(String name) {
+        currentIngredientRepository.deleteAll(findCurrentIngredients(name));
     }
 
     @Transactional
-    public void incrementCurrentIngredient(String name) {
-        CurrentIngredient ingredient = findCurrentIngredient(name);
+    public void deleteCurrentIngredient(int id) {
+        currentIngredientRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void incrementCurrentIngredient(int id) {
+        CurrentIngredient ingredient = findCurrentIngredient(id);
         int count = ingredient.getCount();
         if(count == Integer.MAX_VALUE) return;
         ingredient.setCount(++count);
@@ -53,8 +63,8 @@ public class CurrentIngredientService {
     }
     
     @Transactional
-    public void decrementCurrentIngredient(String name) {
-        CurrentIngredient ingredient = findCurrentIngredient(name);
+    public void decrementCurrentIngredient(int id) {
+        CurrentIngredient ingredient = findCurrentIngredient(id);
         int count = ingredient.getCount();
         ingredient.setCount(--count);
 

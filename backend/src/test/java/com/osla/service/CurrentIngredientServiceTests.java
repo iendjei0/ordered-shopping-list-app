@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,9 +68,9 @@ public class CurrentIngredientServiceTests {
 
 	@Test
 	public void findCurrentIngredient() {
-		given(currentIngredientRepository.findByName("milk")).willReturn(mock(CurrentIngredient.class));
+		given(currentIngredientRepository.findByName("milk")).willReturn(mock(List.class));
 
-		currentIngredientService.findCurrentIngredient("milk");
+		currentIngredientService.findCurrentIngredients("milk");
 
 		verify(currentIngredientRepository).findByName("milk");
 	}
@@ -79,7 +80,7 @@ public class CurrentIngredientServiceTests {
 		given(currentIngredientRepository.findByName("milk")).willThrow(IngredientNotFoundException.class);
 
 		assertThrows(IngredientNotFoundException.class, () -> {
-			currentIngredientService.findCurrentIngredient("milk");
+			currentIngredientService.findCurrentIngredients("milk");
 		});
 
 		verify(currentIngredientRepository).findByName("milk");
@@ -98,24 +99,21 @@ public class CurrentIngredientServiceTests {
 
 	@Test
 	public void deleteCurrentIngredient() {
-		given(currentIngredientRepository.findByName("milk"))
-			.willReturn(CurrentIngredient.builder().name("milk").build());
+		currentIngredientService.deleteCurrentIngredient(17);
 
-		currentIngredientService.deleteCurrentIngredient("milk");
-
-		verify(currentIngredientRepository).delete(
-			argThat(someIngredient -> someIngredient.getName().equals("milk"))
-		);
+		verify(currentIngredientRepository).deleteById(17);
 	}
 
 	@Test
 	public void incrementCurrentIngredient() {
-		given(currentIngredientRepository.findByName("milk"))
-			.willReturn(CurrentIngredient.builder().name("milk").count(1).build());
+		given(currentIngredientRepository.findById(17))
+			.willReturn(Optional.of(CurrentIngredient.builder()
+				.id(17).name("milk").count(1).build()
+			));
 
-		int previousCount = currentIngredientRepository.findByName("milk").getCount();
+		int previousCount = currentIngredientRepository.findById(17).get().getCount();
 
-		currentIngredientService.incrementCurrentIngredient("milk");
+		currentIngredientService.incrementCurrentIngredient(17);
 
 		verify(currentIngredientRepository).save(
 			argThat(someIngredient -> someIngredient.getCount() == previousCount+1)
@@ -124,12 +122,14 @@ public class CurrentIngredientServiceTests {
 
 	@Test
 	public void decrementCurrentIngredient() {
-		given(currentIngredientRepository.findByName("milk"))
-			.willReturn(CurrentIngredient.builder().name("milk").count(3).build());
+		given(currentIngredientRepository.findById(17))
+			.willReturn(Optional.of(CurrentIngredient.builder()
+				.id(17).name("milk").count(3).build()
+			));
 
-		int previousCount = currentIngredientRepository.findByName("milk").getCount();
+		int previousCount = currentIngredientRepository.findById(17).get().getCount();
 
-		currentIngredientService.decrementCurrentIngredient("milk");
+		currentIngredientService.decrementCurrentIngredient(17);
 
 		verify(currentIngredientRepository).save(
 			argThat(someIngredient -> someIngredient.getCount() == previousCount-1)

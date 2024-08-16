@@ -38,15 +38,15 @@ public class CurrentIngredientController {
         return prepareCurrentIngredientsModel(model);
     }
 
-    @PutMapping("/increment/{name}")
-    public String incrementCurrentIngredient(@PathVariable String name, Model model) {
-        currentIngredientService.incrementCurrentIngredient(name);
+    @PutMapping("/increment/{id}")
+    public String incrementCurrentIngredient(@PathVariable int id, Model model) {
+        currentIngredientService.incrementCurrentIngredient(id);
         return prepareCurrentIngredientsModel(model);
     }
     
-    @PutMapping("/decrement/{name}")
-    public String decrementCurrentIngredient(@PathVariable String name, Model model) {
-        currentIngredientService.decrementCurrentIngredient(name);
+    @PutMapping("/decrement/{id}")
+    public String decrementCurrentIngredient(@PathVariable int id, Model model) {
+        currentIngredientService.decrementCurrentIngredient(id);
         return prepareCurrentIngredientsModel(model);
     }
     

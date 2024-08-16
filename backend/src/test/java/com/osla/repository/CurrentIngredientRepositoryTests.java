@@ -16,7 +16,7 @@ import com.osla.model.CurrentIngredient;
 import com.osla.model.OutputIngredient;
 import com.osla.model.SavedIngredient;
 
-@DataJpaTest
+@DataJpaTest()
 public class CurrentIngredientRepositoryTests {
 
     @Autowired
@@ -27,12 +27,12 @@ public class CurrentIngredientRepositoryTests {
 
     @Test
     public void findByName() {
-        CurrentIngredient expected = CurrentIngredient.builder()
-            .name("milk").count(3).build();
+        List<CurrentIngredient> expected = Arrays.asList(CurrentIngredient.builder()
+            .name("milk").count(3).build());
 
-        currentIngredientRepository.save(expected);
+        currentIngredientRepository.save(expected.get(0));
 
-        CurrentIngredient returned = currentIngredientRepository.findByName("milk");
+        List<CurrentIngredient> returned = currentIngredientRepository.findByName("milk");
 
         assertEquals(expected, returned);
     }
@@ -42,9 +42,9 @@ public class CurrentIngredientRepositoryTests {
         currentIngredientRepository.save(CurrentIngredient.builder()
             .name("notmilk").count(3).build());
 
-        CurrentIngredient returned = currentIngredientRepository.findByName("milk");
+        List<CurrentIngredient> returned = currentIngredientRepository.findByName("milk");
         
-        assertNull(returned);
+        assertEquals(Collections.emptyList(), returned);
     }
 
     @Test

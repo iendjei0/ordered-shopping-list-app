@@ -33,12 +33,12 @@ function addCurrentIngredient(name) {
   return genericFetch(`/current/add/${name}`, "POST", outputElement) 
 }
 
-function incrementCurrentIngredient(name) {
-  return genericFetch(`/current/increment/${name}`, "PUT", outputElement) 
+function incrementCurrentIngredient(id) {
+  return genericFetch(`/current/increment/${id}`, "PUT", outputElement) 
 }
 
-function decrementCurrentIngredient(name) {
-  return genericFetch(`/current/decrement/${name}`, "PUT", outputElement) 
+function decrementCurrentIngredient(id) {
+  return genericFetch(`/current/decrement/${id}`, "PUT", outputElement) 
 }
 
 function getShoppingList() {

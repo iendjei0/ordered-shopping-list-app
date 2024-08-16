@@ -95,26 +95,26 @@ public class CurrentIngredientControllerTests {
 
     @Test
     public void incrementCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(put("/current/increment/milk"))
+        MvcResult result = mockMvc.perform(put("/current/increment/17"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("text/html;charset=UTF-8"))
             .andReturn();
 
         testHTMLOutput(result);
 
-        verify(currentIngredientService).incrementCurrentIngredient("milk");
+        verify(currentIngredientService).incrementCurrentIngredient(17);
     }
 
     @Test
     public void decrementCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(put("/current/decrement/milk"))
+        MvcResult result = mockMvc.perform(put("/current/decrement/17"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("text/html;charset=UTF-8"))
             .andReturn();
 
         testHTMLOutput(result);
 
-        verify(currentIngredientService).decrementCurrentIngredient("milk");
+        verify(currentIngredientService).decrementCurrentIngredient(17);
     }
 
     @Test
