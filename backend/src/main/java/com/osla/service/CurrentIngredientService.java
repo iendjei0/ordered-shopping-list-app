@@ -64,7 +64,7 @@ public class CurrentIngredientService {
             currentIngredientRepository.deleteById(ingredient.getId());
         }
     }
-
+    
     public List<OutputIngredient> getSummedOrderedIngredients() {
         return currentIngredientRepository.getSummedOrderedIngredients();
     }
