@@ -1,0 +1,9 @@
+.ingredients-order div {
+    height: 40px;
+    margin: 10px 0;
+    background-color: var(--secondary);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}

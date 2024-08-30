@@ -1,5 +1,6 @@
 package com.osla.controller;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -13,6 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -122,7 +125,7 @@ public class SavedIngredientControllerTests {
             .andExpect(status().isOk())
             .andExpect(content().contentType("text/html;charset=UTF-8"))
             .andReturn();
-        
+
         verify(savedIngredientService).getOrderedIngredients();
     }
 

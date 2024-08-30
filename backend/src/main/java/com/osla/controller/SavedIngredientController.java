@@ -75,7 +75,7 @@ public class SavedIngredientController {
         String name2 = names.get("name2").asText();
         savedIngredientService.swapIngredientOrder(name1, name2);
 
-        model.addAttribute("ordered-ingredients", savedIngredientService.getOrderedIngredients());
+        model.addAttribute("ordered", savedIngredientService.getOrderedIngredients());
         return "fragments :: ingredient-order";
     }
 }

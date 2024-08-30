@@ -8,7 +8,7 @@ const htmlElements = {
 
 // HTML calls
 function genericHTMLJsonFetch(endpoint, method, elementsToUpdate) {
-    fetch(endpoint, { method:method })
+    return fetch(endpoint, { method:method })
     .then(response => {
         if(!response.ok) {
             return response.text().then(text => {
@@ -38,11 +38,16 @@ function deleteSavedIngredient(name) {
 }
 
 function swapIngredientsOrder(name1, name2) {
-    fetch("/saved/swap", { 
+    console.log("imin")
+    return fetch("/saved/swap", { 
         method:"PUT",
-        body:{name1:name1, name2:name2} 
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body:JSON.stringify({ name1: name1, name2: name2 })
     })
     .then(response => {
+        console.log(response)
         if(!response.ok) {
             return response.text().then(text => {
                 throw new Error(text || response.statusText) 
@@ -51,7 +56,7 @@ function swapIngredientsOrder(name1, name2) {
         return response.text()
     })
     .then(text => {
-        elementToUpdate.innerHTML = text;
+        htmlElements["ingredient-order"].innerHTML = text;
     })
     .catch(error => console.log(error))
 }
@@ -69,5 +74,14 @@ htmlElements.inputButton.addEventListener("click", () => {
     htmlElements.input.value = ""
 })
 
+
 // On start
-getHtmlElements()
+async function start() {
+    console.log(test())
+    console.log("tryin")
+    await getHtmlElements()
+
+    document.dispatchEvent(new Event("htmlElementsLoaded"))
+    console.log("done")
+}
+start()
