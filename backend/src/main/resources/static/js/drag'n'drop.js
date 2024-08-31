@@ -4,7 +4,6 @@ function setupDraggables() {
     const draggables = document.querySelectorAll(".ingredients-order div")
     draggables.forEach((draggable) => {
         draggable.draggable = true
-        draggable.classList.add("gay")
         draggable.addEventListener('dragstart', () => {
             draggable.classList.add("currently-dragging")
         })
@@ -56,10 +55,6 @@ function getNameFromDraggable(draggable) {
 function setupDragNDrop() {
     setupDraggables()
     setupDragZone()
-}
-
-function test() {
-    return "test"
 }
 
 document.addEventListener("htmlElementsLoaded", () => {

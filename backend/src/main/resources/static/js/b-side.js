@@ -77,11 +77,8 @@ htmlElements.inputButton.addEventListener("click", () => {
 
 // On start
 async function start() {
-    console.log(test())
-    console.log("tryin")
     await getHtmlElements()
 
     document.dispatchEvent(new Event("htmlElementsLoaded"))
-    console.log("done")
 }
 start()
