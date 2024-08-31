@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
       <link rel="stylesheet" href="/css/general.css" defer>
       <link rel="stylesheet" href="/css/shared.css" defer>
       <link rel="stylesheet" href="/css/b-side.css" defer>
@@ -10,11 +11,11 @@
   <body>
       <header>
         <div class="logo" style="text-align: center;">
-          <h1>Some logo</h1>
+          <h1>Ordered Shopping List</h1>
         </div>
         <div class="user-account">
-          <p>Some text</p>
-          <button>Acc</button>
+          <h3>Account</h3>
+          <button><i class="fa-solid fa-user"></i></button>
         </div>
       </header>
       <main>
@@ -46,8 +47,7 @@
         </div>
       </main>
       <footer>
-        <a th:href="@{/}"> <button>Recipe</button>
-        <a th:href="@{/}"> <button>Order</button>
+        <a th:href="@{/}"> <button>Home</button>
       </footer>
   </body>
 </html>

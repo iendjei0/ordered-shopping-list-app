@@ -5,9 +5,28 @@
     right: 0;
     display: flex;
     justify-content: space-evenly;
+    pointer-events: none;
 }
 
 .create-button button {
-    width: 100px;
-    height: 50px;
+    width: 150px;
+    height: 55px;
+    pointer-events: auto;
+}
+
+.right-side h1 {
+    margin-bottom: 0;
+}
+
+.shopping-list {
+    margin: 50px 20px;
+}
+
+.shopping-list div {
+    margin: 10px 0;
+}
+
+.shopping-list div span {
+    font-size: 25px;
+    margin-right: 10px;
 }
