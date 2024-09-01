@@ -35,6 +35,11 @@ A Spring Boot application that allows you to manage a shopping list by adding in
 
 4. The application will start on `http://localhost:8080`.
 
+## Screenshots
+![alt text](https://github.com/iendjei0/Tetris/blob/main/Demo/menu.png)
+![alt text](https://github.com/iendjei0/Tetris/blob/main/Demo/ingame1.png)
+![alt text](https://github.com/iendjei0/Tetris/blob/main/Demo/ingame2.png)
+
 ## Configuration
 
 - The application is configured to use a local H2 database by default. If you want to use a different database, you can modify the `application.properties` file located in the `src/main/resources` directory.
