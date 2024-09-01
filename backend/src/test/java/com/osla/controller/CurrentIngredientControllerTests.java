@@ -64,9 +64,9 @@ public class CurrentIngredientControllerTests {
 
         Document doc = Jsoup.parse(returnedHtml);
         
-        assertEquals(3, doc.select("div").size());
+        assertEquals(3, doc.select("body > div").size());
         assertEquals("egg", doc.select("#ingredient-1 span").first().text());
-        assertEquals("2", doc.select("#ingredient-2 span").get(1).text());
+        assertEquals("x2", doc.select("#ingredient-2 span").get(1).text());
     }
 
     @Test
