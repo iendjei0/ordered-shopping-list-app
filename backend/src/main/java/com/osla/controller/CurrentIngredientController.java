@@ -1,14 +1,18 @@
 package com.osla.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.osla.model.CurrentIngredient;
+import com.osla.model.OutputIngredient;
 import com.osla.service.CurrentIngredientService;
 import com.osla.service.IngredientManagementService;
 
@@ -22,38 +26,32 @@ public class CurrentIngredientController {
     @Autowired
     private IngredientManagementService ingredientManagementService;
 
-    private String prepareCurrentIngredientsModel(Model model) {
-        model.addAttribute("ingredients", currentIngredientService.getCurrentIngredients());
-        return "fragments :: ingredients-list";
+    @GetMapping
+    public ResponseEntity<List<CurrentIngredient>> getCurrentIngredients() {
+        return ResponseEntity.ok(currentIngredientService.getCurrentIngredients());
     }
 
-    @GetMapping()
-    public String getCurrentIngredients(Model model) {
-        return prepareCurrentIngredientsModel(model);
-    }
-    
     @PostMapping("/add/{name}")
-    public String addCurrentIngredient(@PathVariable String name, Model model) {
+    public ResponseEntity<List<CurrentIngredient>> addCurrentIngredient(@PathVariable String name) {
         ingredientManagementService.addIngredient(name);
-        return prepareCurrentIngredientsModel(model);
+        return ResponseEntity.ok(currentIngredientService.getCurrentIngredients());
     }
 
     @PutMapping("/increment/{id}")
-    public String incrementCurrentIngredient(@PathVariable int id, Model model) {
+    public ResponseEntity<List<CurrentIngredient>> incrementCurrentIngredient(@PathVariable int id) {
         currentIngredientService.incrementCurrentIngredient(id);
-        return prepareCurrentIngredientsModel(model);
+        return ResponseEntity.ok(currentIngredientService.getCurrentIngredients());
     }
-    
+
     @PutMapping("/decrement/{id}")
-    public String decrementCurrentIngredient(@PathVariable int id, Model model) {
+    public ResponseEntity<List<CurrentIngredient>> decrementCurrentIngredient(@PathVariable int id) {
         currentIngredientService.decrementCurrentIngredient(id);
-        return prepareCurrentIngredientsModel(model);
+        return ResponseEntity.ok(currentIngredientService.getCurrentIngredients());
     }
-    
+
     @GetMapping("/processed")
-    public String getSummedOrderedIngredients(Model model) {
-        model.addAttribute("ingredients", currentIngredientService.getSummedOrderedIngredients());
-        return "fragments :: shopping-list";
+    public ResponseEntity<List<OutputIngredient>> getSummedOrderedIngredients() {
+        return ResponseEntity.ok(currentIngredientService.getSummedOrderedIngredients());
     }
     
 }

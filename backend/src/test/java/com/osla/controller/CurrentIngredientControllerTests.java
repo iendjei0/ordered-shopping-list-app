@@ -4,12 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,18 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.osla.model.CurrentIngredient;
+import com.osla.model.OutputIngredient;
+import com.osla.service.CurrentIngredientService;
+import com.osla.service.IngredientManagementService;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.osla.model.CurrentIngredient;
-import com.osla.service.CurrentIngredientService;
-import com.osla.service.IngredientManagementService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,92 +39,106 @@ public class CurrentIngredientControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private CurrentIngredientService currentIngredientService;
 
     @MockBean
     private IngredientManagementService ingredientManagementService;
 
+
+    private List<CurrentIngredient> currentIngredients;
+
     @BeforeEach
     public void initMocks() {
-        List<CurrentIngredient> currentIngredients = Arrays.asList(
-			CurrentIngredient.builder()
-				.id(1).name("egg").count(3).build(),
-			CurrentIngredient.builder()
-				.id(2).name("flour").count(2).build(),
-			CurrentIngredient.builder()
-				.id(3).name("milk").count(5).build()
-		);
+        currentIngredients = Arrays.asList(
+            CurrentIngredient.builder()
+                .id(1).name("egg").count(3).build(),
+            CurrentIngredient.builder()
+                .id(2).name("flour").count(2).build(),
+            CurrentIngredient.builder()
+                .id(3).name("milk").count(5).build()
+        );
 
         given(currentIngredientService.getCurrentIngredients()).willReturn(currentIngredients);
     }
 
-    private void testHTMLOutput(MvcResult result) throws UnsupportedEncodingException {
-        String returnedHtml = result.getResponse().getContentAsString();
-
-        Document doc = Jsoup.parse(returnedHtml);
-        
-        assertEquals(3, doc.select("body > div").size());
-        assertEquals("egg", doc.select("#ingredient-1 span").first().text());
-        assertEquals("x2", doc.select("#ingredient-2 span").get(1).text());
-    }
-
     @Test
     public void getCurrentIngredientsEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(get("/current"))
+        MvcResult result = mockMvc.perform(get("/current")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("text/html;charset=UTF-8"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
 
-        testHTMLOutput(result);
+        String expectedJson = objectMapper.writeValueAsString(currentIngredients);
+        assertEquals(expectedJson, result.getResponse().getContentAsString());
 
         verify(currentIngredientService).getCurrentIngredients();
     }
 
     @Test
     public void addCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(post("/current/add/milk"))
+        MvcResult result = mockMvc.perform(post("/current/add/milk")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("text/html;charset=UTF-8"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
 
-        testHTMLOutput(result);
+        String expectedJson = objectMapper.writeValueAsString(currentIngredients);
+        assertEquals(expectedJson, result.getResponse().getContentAsString());
 
         verify(ingredientManagementService).addIngredient("milk");
     }
 
     @Test
     public void incrementCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(put("/current/increment/17"))
+        MvcResult result = mockMvc.perform(put("/current/increment/17")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("text/html;charset=UTF-8"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
 
-        testHTMLOutput(result);
+        String expectedJson = objectMapper.writeValueAsString(currentIngredients);
+        assertEquals(expectedJson, result.getResponse().getContentAsString());
 
         verify(currentIngredientService).incrementCurrentIngredient(17);
     }
 
     @Test
     public void decrementCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(put("/current/decrement/17"))
+        MvcResult result = mockMvc.perform(put("/current/decrement/17")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("text/html;charset=UTF-8"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
 
-        testHTMLOutput(result);
+        String expectedJson = objectMapper.writeValueAsString(currentIngredients);
+        assertEquals(expectedJson, result.getResponse().getContentAsString());
 
         verify(currentIngredientService).decrementCurrentIngredient(17);
     }
 
     @Test
     public void getSummedOrderedIngredientsEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(get("/current/processed"))
+        List<OutputIngredient> outputIngredients = Arrays.asList(
+            new OutputIngredient("egg", 3),
+            new OutputIngredient("flour", 2),
+            new OutputIngredient("milk", 5)
+        );
+
+        given(currentIngredientService.getSummedOrderedIngredients()).willReturn(outputIngredients);
+
+        MvcResult result = mockMvc.perform(get("/current/processed")
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("text/html;charset=UTF-8"))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
 
-        // testHTMLOutput(result); TODO: custom version of this
+        String expectedJson = objectMapper.writeValueAsString(outputIngredients);
+        assertEquals(expectedJson, result.getResponse().getContentAsString());
 
         verify(currentIngredientService).getSummedOrderedIngredients();
     }
