@@ -1,8 +1,11 @@
+import { Link } from "react-router-dom"
 
-function Footer({text}) {
+function Footer({text, path}) {
   return (
     <footer>
-      <button> {text} </button>
+      <Link to={path}>
+        <button> {text} </button>
+      </Link>
     </footer>
   )
 }
