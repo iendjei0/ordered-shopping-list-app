@@ -53,7 +53,7 @@ function Home() {
 
   useEffect(() => {
     getCurrentIngredients()
-  })
+  }, [])
 
 
 

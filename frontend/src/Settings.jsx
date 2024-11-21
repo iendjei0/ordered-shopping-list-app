@@ -67,7 +67,7 @@ function Settings() {
 
   useEffect(() => {
     getIngredients()
-  })
+  }, [])
 
   return (
     <>
