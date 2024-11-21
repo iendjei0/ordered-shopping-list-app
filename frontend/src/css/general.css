@@ -3,10 +3,12 @@
 
 :root {
     --text: #d4f8ea;
-    --background: #041a13;
-    --background2: #06271d;
+    --background1: #032d21;
+    --background2: #002319;
+    --background3: #041a13;
     --primary: #86eac8;
     --secondary: #008B8B;
+    --secondary2: #0a2a2a;
     --accent: #0a3aa1;
 
     --text-50: #e9fbf4;
@@ -101,7 +103,7 @@ p {font-size: 16px;}
 } */
 
 body {
-    background-color: var(--background);
+    background-color: var(--background3);
     color: var(--text);
     margin: 0px;
 }

@@ -1,5 +1,5 @@
 header {
-    background-color: var(--primary);
+    background-color: var(--background2);
     height: 100px;
     display: flex;
     justify-content: space-evenly;
@@ -8,19 +8,16 @@ header {
     left: 0;
     right: 0;
     z-index: 10;
-    border-bottom-style: solid;
-    border-width: 10px;
-    border-color: var(--accent);
 }
 
 .logo {
     background-color: var(--secondary);
     height: 80px;
     width: 400px;
-    border-color: var(--accent);
+    border-color: var(--primary);
     border-style: solid;
     border-top-style: none;
-    border-width: 10px;
+    border-width: 6px;
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
     text-align: center;
@@ -40,10 +37,10 @@ header {
     justify-content: space-evenly;
     align-items: center;
 
-    border-color: var(--accent);
+    border-color: var(--primary);
     border-bottom-style: solid;
     border-left-style: solid;
-    border-width: 10px;
+    border-width: 6px;
     border-bottom-left-radius: 50px;
 }
 
@@ -60,7 +57,7 @@ main {
 }
 
 .left-side, .right-side {
-    background-color: var(--background2);
+    background-color: var(--background1);
     padding: 0px 50px;
 }
 
@@ -129,7 +126,7 @@ main {
 }
 
 footer {
-    background-color: var(--secondary);
+    background-color: var(--background2);
     height: 100px;
     width: 200px;
     display: flex;
@@ -139,10 +136,10 @@ footer {
     bottom: 0;
     right: 0;
     z-index: 10;
-    border-color: var(--accent);
+    border-color: var(--background3);
     border-top-style: solid;
     border-left-style: solid;
-    border-width: 10px;
+    border-width: 6px;
     border-top-left-radius: 50px;
 }
 
@@ -167,7 +164,7 @@ button {
 
 button:hover {
     background-color: var(--primary); 
-    color: var(--background2);
+    color: var(--background1);
     transition: 0.2s;
 }
 
