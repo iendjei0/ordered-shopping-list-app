@@ -1,4 +1,4 @@
-header {
+.global header {
     background-color: var(--background2);
     height: 100px;
     display: flex;
@@ -44,7 +44,7 @@ header {
     border-bottom-left-radius: 50px;
 }
 
-main {
+.global main {
     position: relative;
     margin-top: 110px;
 }
@@ -125,7 +125,7 @@ main {
     color: var(--primary)
 }
 
-footer {
+.global footer {
     background-color: var(--background2);
     height: 100px;
     width: 200px;
@@ -143,12 +143,12 @@ footer {
     border-top-left-radius: 50px;
 }
 
-footer button {
+.global footer button {
     width: 150px;
     height: 60px;
 }
 
-button {
+.global button {
     width: 50px;
     height: 50px;
     font-size: 20px;
@@ -162,13 +162,13 @@ button {
     transition: 0.2s;
 }
 
-button:hover {
+.global button:hover {
     background-color: var(--primary); 
     color: var(--background1);
     transition: 0.2s;
 }
 
-button:active {
+.global button:active {
     background-color: var(--secondary);
     border-color: var(--primary);
     color: var(--primary);

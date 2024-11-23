@@ -1,4 +1,5 @@
-import './css/index.css'
+import sharedStyles from './css/Shared.module.css'
+import indexStyles from './css/Index.module.css'
 import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useEffect, useState } from 'react'
@@ -57,14 +58,14 @@ function Home() {
 
 
   return (
-    <>
+    <div className={sharedStyles.global}>
       <Header />
       <main>
-        <div class="create-button">
+        <div className={indexStyles["create-button"]}>
           <button onClick={getShoppingList}>Create</button>
         </div>
-        <div class="grid">
-          <div class="left-side">
+        <div className={sharedStyles.grid}>
+          <div className={sharedStyles["left-side"]}>
             <section class="instructions">
               <h2>Add items to the shopping list</h2>
               <p>
@@ -72,11 +73,11 @@ function Home() {
                 Freely add them in any order along with duplicates!
               </p>
             </section>
-            <div class="list-creator">
+            <div className={sharedStyles["list-creator"]}>
               <IngredientInput
                 addFunction={addCurrentIngredient}
               />
-              <div class="output">
+              <div className={sharedStyles.output}>
                 <CurrentIngredients 
                   data={currentIngredients}
                   plusAction={incrementCurrentIngredient}
@@ -85,9 +86,9 @@ function Home() {
               </div>
             </div>
           </div>
-          <div class="right-side">
+          <div className={`${sharedStyles["right-side"]} ${indexStyles["right-side"]}`}>
             <h1>Shopping list <button> <i class="fa-solid fa-file-export"></i> </button> </h1>
-            <div class="shopping-list">
+            <div className={indexStyles["shopping-list"]}>
               <ShoppingList 
                 data={shoppingList}
               />
@@ -96,7 +97,7 @@ function Home() {
         </div>
       </main>
       <Footer text="Settings" path="/settings"/>
-    </>
+    </div>
   )
 }
 

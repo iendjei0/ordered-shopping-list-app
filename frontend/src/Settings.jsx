@@ -1,4 +1,5 @@
-import './css/b-side.css'
+import sharedStyles from './css/Shared.module.css'
+import bsideStyles from './css/B-side.module.css'
 import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useState, useEffect } from 'react'
@@ -71,11 +72,11 @@ function Settings() {
   }, [])
 
   return (
-    <>
+    <div className={sharedStyles.global}>
       <Header />
       <main>
-        <div class="grid">
-          <div class="left-side">
+        <div className={sharedStyles.grid}>
+          <div className={sharedStyles["left-side"]}>
             <section class="instructions">
               <h2>Ingredients & recipes</h2>
               <p>
@@ -83,11 +84,11 @@ function Settings() {
                 You can delete them or add new ones.
               </p>
             </section>
-            <div class="list-creator">
+            <div className={sharedStyles["list-creator"]}>
               <IngredientInput
                 addFunction={addSavedIngredient}
               />
-              <div class="output">
+              <div className={sharedStyles.output}>
                 <SavedIngredients
                   data={savedIngredients}
                   minusAction={deleteSavedIngredient}
@@ -95,9 +96,9 @@ function Settings() {
               </div>
             </div>
           </div>
-          <div class="right-side">
+          <div className={sharedStyles["right-side"]}>
             <h1>The order</h1>
-            <div class="ingredients-order">
+            <div className={bsideStyles["ingredients-order"]}>
               <IngredientOrder
                 data={ingredientOrder}
                 swap={swapIngredientOrder}
@@ -107,7 +108,7 @@ function Settings() {
         </div>
       </main>
       <Footer text="Home" path="/"/>
-    </>
+    </div>
   )
 }
 

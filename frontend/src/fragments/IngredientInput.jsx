@@ -1,4 +1,5 @@
 import { useState } from "react"
+import sharedStyles from '../css/Shared.module.css'
 
 function IngredientInput({addFunction}) {
 	const [ingredient, setIngredient] = useState('')
@@ -22,7 +23,7 @@ function IngredientInput({addFunction}) {
 	}
 	
 	return (
-		<div class="input">
+		<div className={sharedStyles.input}>
 			<input 
 				placeholder="Insert text here"
 				value={ingredient}
