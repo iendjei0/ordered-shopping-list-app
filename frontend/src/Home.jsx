@@ -3,7 +3,7 @@ import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useEffect, useState } from 'react'
 import CurrentIngredients from './fragments/CurrentIngredients.jsx'
-import { API_PATH } from './api.jsx'
+import { API_PATH, AUTH_HEADER } from './api.jsx'
 import ShoppingList from './fragments/ShoppingList.jsx'
 import IngredientInput from './fragments/IngredientInput.jsx'
 
@@ -13,7 +13,7 @@ function Home() {
 
   const genericFetch = (endpoint, method) => {
     return (
-      fetch(API_PATH+endpoint, {method:method})
+      fetch(API_PATH+endpoint, {method:method, headers:AUTH_HEADER})
         .then(response => {
           if(!response.ok){
             return response.text().then(text => { 
@@ -54,7 +54,6 @@ function Home() {
   useEffect(() => {
     getCurrentIngredients()
   }, [])
-
 
 
   return (

@@ -2,7 +2,7 @@ import './css/b-side.css'
 import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useState, useEffect } from 'react'
-import { API_PATH } from './api.jsx'
+import { API_PATH, AUTH_HEADER } from './api.jsx'
 import IngredientInput from './fragments/IngredientInput.jsx'
 import SavedIngredients from './fragments/SavedIngredients.jsx'
 import IngredientOrder from './fragments/IngredientOrder.jsx'
@@ -13,7 +13,7 @@ function Settings() {
 
   const genericFetch = async (endpoint, method) => {
     return (
-      fetch(API_PATH+endpoint, {method:method})
+      fetch(API_PATH+endpoint, {method:method, headers:AUTH_HEADER})
         .then(response => {
           if(!response.ok){
             return response.text().then(text => { 
@@ -46,7 +46,8 @@ function Settings() {
     return fetch(API_PATH+"/saved/swap", { 
         method:"PUT",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            ...AUTH_HEADER
         },
         body:JSON.stringify({ name1: name1, name2: name2 })
     })
