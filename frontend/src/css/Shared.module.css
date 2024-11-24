@@ -65,7 +65,7 @@
     margin-bottom: 0;
 }
 
-.left-side button {
+.global .left-side button {
     width: 40px;
     height: 40px;
     font-size: 20px;
@@ -171,5 +171,5 @@
 .global button:active {
     background-color: var(--secondary);
     border-color: var(--primary);
-    color: var(--primary);
+    colo.r: var(--primary);
 }
