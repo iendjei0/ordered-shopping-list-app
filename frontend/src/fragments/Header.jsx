@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import sharedStyles from '../css/Shared.module.css'
 
 function Header() {
@@ -8,7 +9,9 @@ function Header() {
         </div>
         <div className={sharedStyles['user-account']}>
           <h3>Account</h3>
-          <button><i class="fa-solid fa-user"></i></button>
+          <Link to='/account'>
+            <button><i class="fa-solid fa-user"></i></button>
+          </Link>
         </div>
       </header>
     )

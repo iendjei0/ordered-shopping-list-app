@@ -1,0 +1,38 @@
+.global {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+}
+
+.global main {
+    margin-top: 0;
+    background-color: var(--background2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 400px;
+    border-radius: 30px;
+    padding: 30px 0;
+}
+
+.global input {
+    width: 300px;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 15px;
+}
+
+.global input:focus {
+    outline: none;
+}
+
+.global button {
+    width: 300px;
+}
+
+.global spacer {
+    height: 15px;
+}
