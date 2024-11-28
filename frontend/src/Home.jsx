@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import CurrentIngredients from './fragments/CurrentIngredients.jsx'
 import { API_PATH, AUTH_HEADER } from './api.jsx'
 import ShoppingList from './fragments/ShoppingList.jsx'
-import IngredientInput from './fragments/IngredientInput.jsx'
+import { IngredientInput } from './fragments/Input.jsx'
 
 function Home() {
   const [currentIngredients, setCurrentIngredients] = useState([])

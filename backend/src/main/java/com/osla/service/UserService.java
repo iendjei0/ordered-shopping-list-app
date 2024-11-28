@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.exceptions.UserAlreadyExists;
 import com.exceptions.UserNotFoundException;
 import com.osla.model.User;
 import com.osla.repository.UserRepository;
@@ -33,7 +34,22 @@ public class UserService {
 
     @Transactional
     public void addUser(User user) {
+        if(userRepository.findByUsername(user.getUsername()) != null)
+            throw new UserAlreadyExists("User with name " + user.getUsername() + " already exists");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-    }   
+    }
+
+    @Transactional
+    public boolean authenticate(String username, String password) {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new UserNotFoundException("Couldn't find user with name " + username);
+        }
+
+        if(bCryptPasswordEncoder.matches(password, user.getPassword()))
+            return true;
+        else
+            return false;
+    }
 }

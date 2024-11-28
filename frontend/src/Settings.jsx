@@ -4,7 +4,7 @@ import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useState, useEffect } from 'react'
 import { API_PATH, AUTH_HEADER } from './api.jsx'
-import IngredientInput from './fragments/IngredientInput.jsx'
+import { IngredientInput } from './fragments/Input.jsx'
 import SavedIngredients from './fragments/SavedIngredients.jsx'
 import IngredientOrder from './fragments/IngredientOrder.jsx'
 
