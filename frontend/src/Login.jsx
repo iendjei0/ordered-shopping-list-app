@@ -4,6 +4,7 @@ import accountStyles from './css/Account.module.css'
 import { AccountInput, HiddenInput } from './fragments/Input'
 import { useState } from 'react'
 import { API_PATH } from './api'
+import { useAuth } from './fragments/AuthContext'
 
 function Login() {
   const [loginData, setLoginData] = useState({
@@ -11,6 +12,7 @@ function Login() {
     password:''
   })
   const [message, setMessage] = useState('')
+  const {login} = useAuth()
 
   const loginFetch = () => {
     if(loginData.username === '' || loginData.password === '') {
@@ -33,6 +35,10 @@ function Login() {
           });
         }
         setMessage("Login successful")
+        return response.json()
+      })
+      .then(json => {
+        login(json.token)
       })
       .catch((error) => console.log(error))
   }
@@ -55,7 +61,7 @@ function Login() {
         <button onClick={loginFetch}>Login</button>
       </main>
       <footer>
-        <Link to='/'>
+        <Link to='/account'>
           <button>Back</button>
         </Link>
       </footer>

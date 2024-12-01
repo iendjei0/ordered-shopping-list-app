@@ -65,7 +65,7 @@ function Register() {
         <button onClick={registerFetch}>Register</button>
       </main>
       <footer>
-        <Link to='/'>
+        <Link to='/account'>
           <button>Back</button>
         </Link>
       </footer>

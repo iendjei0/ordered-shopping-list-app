@@ -4,13 +4,16 @@ import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useEffect, useState } from 'react'
 import CurrentIngredients from './fragments/CurrentIngredients.jsx'
-import { API_PATH, AUTH_HEADER } from './api.jsx'
+import { API_PATH } from './api.jsx'
 import ShoppingList from './fragments/ShoppingList.jsx'
 import { IngredientInput } from './fragments/Input.jsx'
+import { useAuth } from './fragments/AuthContext.jsx'
 
 function Home() {
   const [currentIngredients, setCurrentIngredients] = useState([])
   const [shoppingList, setShoppingList] = useState([])
+  const {authToken} = useAuth()
+  const AUTH_HEADER = {'Authorization': 'Basic ' + authToken}
 
   const genericFetch = (endpoint, method) => {
     return (

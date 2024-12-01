@@ -1,5 +1,6 @@
 package com.osla.controller;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.exceptions.UserAlreadyExists;
 import com.exceptions.UserNotFoundException;
+import com.osla.model.AuthToken;
 import com.osla.model.User;
 import com.osla.service.UserService;
 
@@ -45,12 +47,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user, HttpSession session) {
+    public ResponseEntity<?> login(@RequestBody User user, HttpSession session) {
         try {
             boolean authenticated = userService.authenticate(user.getUsername(), user.getPassword());
             if (authenticated) {
-                session.setAttribute("username", user.getUsername());
-                return ResponseEntity.ok("Login successful.");
+                String token = Base64.getEncoder()
+                    .encodeToString((user.getUsername() + ":" + user.getPassword()).getBytes());
+                return ResponseEntity.ok(new AuthToken(token));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password.");
             }
