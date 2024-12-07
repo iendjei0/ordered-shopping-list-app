@@ -22,7 +22,7 @@ public interface CurrentIngredientRepository extends JpaRepository<CurrentIngred
             FROM CurrentIngredient ci
             JOIN SavedIngredient si ON ci.name=si.name
             WHERE ci.userId = :userId
-            GROUP BY ci.name
+            GROUP BY ci.name, si.orderValue
             ORDER BY si.orderValue
             """)
     public List<OutputIngredient> getSummedOrderedIngredients(@Param("userId") int userId);
