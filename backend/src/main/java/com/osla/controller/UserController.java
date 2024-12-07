@@ -1,7 +1,6 @@
 package com.osla.controller;
 
 import java.util.Base64;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,25 +15,15 @@ import com.osla.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
     @Autowired
     private UserService userService;
-
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userService.getUsers();
-    }
-
-    @GetMapping("/user/{id}")
-    public User getUser(@PathVariable int id) {
-        return userService.getUser(id);
-    }
 
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user) {

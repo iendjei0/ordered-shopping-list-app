@@ -24,7 +24,7 @@ import com.osla.service.SavedIngredientService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/saved")
+@RequestMapping("api/saved")
 public class SavedIngredientController {
 
     @Autowired

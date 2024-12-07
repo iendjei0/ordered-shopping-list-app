@@ -3,7 +3,6 @@ import sharedStyles from './css/Shared.module.css'
 import accountStyles from './css/Account.module.css'
 import { AccountInput, HiddenInput } from './fragments/Input'
 import { useState } from 'react'
-import { API_PATH } from './api'
 import { useAuth } from './fragments/AuthContext'
 
 function Login() {
@@ -20,7 +19,7 @@ function Login() {
       return
     }
 
-    fetch(API_PATH+'/login', {
+    fetch('/api/login', {
       method:'POST', 
       headers:{
         'Content-Type': 'application/json'

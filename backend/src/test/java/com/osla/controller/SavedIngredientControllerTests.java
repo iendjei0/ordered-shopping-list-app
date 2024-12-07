@@ -235,11 +235,6 @@ public class SavedIngredientControllerTests {
         assertTrue(json.has("savedIngredients"));
         assertTrue(json.has("ingredientOrder"));
 
-        List<SavedIngredient> responseSavedIngredients = objectMapper.convertValue(
-            json.get("savedIngredients"),
-            objectMapper.getTypeFactory().constructCollectionType(List.class, SavedIngredient.class)
-        );
-
         List<SavedIngredient> responseOrderedIngredients = objectMapper.convertValue(
             json.get("ingredientOrder"),
             objectMapper.getTypeFactory().constructCollectionType(List.class, SavedIngredient.class)

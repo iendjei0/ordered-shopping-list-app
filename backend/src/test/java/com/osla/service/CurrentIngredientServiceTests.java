@@ -9,10 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +65,7 @@ public class CurrentIngredientServiceTests {
         assertEquals(Collections.emptyList(), currentIngredientService.getCurrentIngredients(1));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void findCurrentIngredient() {
         given(currentIngredientRepository.findByNameAndUserId("milk", 1)).willReturn(mock(List.class));

@@ -4,7 +4,6 @@ import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useEffect, useState } from 'react'
 import CurrentIngredients from './fragments/CurrentIngredients.jsx'
-import { API_PATH } from './api.jsx'
 import ShoppingList from './fragments/ShoppingList.jsx'
 import { IngredientInput } from './fragments/Input.jsx'
 import { useAuth } from './fragments/AuthContext.jsx'
@@ -17,7 +16,7 @@ function Home() {
 
   const genericFetch = (endpoint, method) => {
     return (
-      fetch(API_PATH+endpoint, {method:method, headers:AUTH_HEADER})
+      fetch(endpoint, {method:method, headers:AUTH_HEADER})
         .then(response => {
           if(!response.ok){
             return response.text().then(text => { 
@@ -31,27 +30,27 @@ function Home() {
   }
 
   const getCurrentIngredients = async () => {
-    const data = await genericFetch("/current", "GET") 
+    const data = await genericFetch("/api/current", "GET") 
     setCurrentIngredients(data)
   }
   
   const addCurrentIngredient = async (name) => {
-    const data = await genericFetch(`/current/add/${name}`, "POST")
+    const data = await genericFetch(`/api/current/add/${name}`, "POST")
     setCurrentIngredients(data)
   }
 
   const incrementCurrentIngredient = async (id) => {
-    const data = await genericFetch(`/current/increment/${id}`, "PUT")
+    const data = await genericFetch(`/api/current/increment/${id}`, "PUT")
     setCurrentIngredients(data)
   }
 
   const decrementCurrentIngredient = async (id) => {
-    const data = await genericFetch(`/current/decrement/${id}`, "PUT")
+    const data = await genericFetch(`/api/current/decrement/${id}`, "PUT")
     setCurrentIngredients(data)
   }
   
   const getShoppingList = async () => {
-    const data = await genericFetch("/current/processed", "GET")
+    const data = await genericFetch("/api/current/processed", "GET")
     setShoppingList(data)
   }
 

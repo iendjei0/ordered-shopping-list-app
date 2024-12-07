@@ -21,7 +21,7 @@ import com.osla.service.IngredientManagementService;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/current")
+@RequestMapping("api/current")
 public class CurrentIngredientController {
     
     @Autowired

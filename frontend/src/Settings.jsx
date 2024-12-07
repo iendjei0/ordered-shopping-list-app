@@ -3,7 +3,6 @@ import bsideStyles from './css/B-side.module.css'
 import Header from './fragments/Header.jsx'
 import Footer from './fragments/Footer.jsx'
 import { useState, useEffect } from 'react'
-import { API_PATH } from './api.jsx'
 import { IngredientInput } from './fragments/Input.jsx'
 import SavedIngredients from './fragments/SavedIngredients.jsx'
 import IngredientOrder from './fragments/IngredientOrder.jsx'
@@ -17,7 +16,7 @@ function Settings() {
 
   const genericFetch = async (endpoint, method) => {
     return (
-      fetch(API_PATH+endpoint, {method:method, headers:AUTH_HEADER})
+      fetch(endpoint, {method:method, headers:AUTH_HEADER})
         .then(response => {
           if(!response.ok){
             return response.text().then(text => { 
@@ -35,19 +34,19 @@ function Settings() {
   }
 
   const getIngredients = async () => {
-    await genericFetch("/saved", "GET")
+    await genericFetch("/api/saved", "GET")
   }
 
   const addSavedIngredient = async (name) => {
-    await genericFetch(`/saved/add/${name}`, "POST")
+    await genericFetch(`/api/saved/add/${name}`, "POST")
   }
 
   const deleteSavedIngredient = async (name) => {
-    await genericFetch(`/saved/delete/${name}`, "DELETE")
+    await genericFetch(`/api/saved/delete/${name}`, "DELETE")
   }
 
   const swapIngredientOrder = (name1, name2) => {
-    return fetch(API_PATH+"/saved/swap", { 
+    return fetch("/api/saved/swap", { 
         method:"PUT",
         headers: {
             "Content-Type": "application/json",

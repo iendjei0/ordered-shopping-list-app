@@ -3,7 +3,6 @@ import sharedStyles from './css/Shared.module.css'
 import accountStyles from './css/Account.module.css'
 import { useState } from 'react'
 import { AccountInput, HiddenInput } from './fragments/Input'
-import { API_PATH } from './api'
 
 function Register() {
   const [registerData, setRegisterData] = useState({
@@ -23,7 +22,7 @@ function Register() {
       return
     }
 
-    fetch(API_PATH+'/register', {
+    fetch('/api/register', {
       method:'POST', 
       headers:{
         'Content-Type': 'application/json'
