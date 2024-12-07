@@ -17,23 +17,23 @@ public class IngredientManagementService {
     private SavedIngredientService savedIngredientService;
     
     @Transactional
-    public void addIngredient(String name) {
+    public void addIngredient(String name, int userId) {
         try {
-            savedIngredientService.findSavedIngredient(name);
+            savedIngredientService.findSavedIngredient(name, userId);
         } catch (IngredientNotFoundException e) {
-            savedIngredientService.addSavedIngredient(name);
+            savedIngredientService.addSavedIngredient(name, userId);
         }
 
-        currentIngredientService.addCurrentIngredient(name);
+        currentIngredientService.addCurrentIngredient(name, userId);
     }
 
     @Transactional
-    public void deleteIngredient(String name) {
+    public void deleteIngredient(String name, int userId) {
         try {
-            currentIngredientService.findCurrentIngredients(name);
-            currentIngredientService.deleteCurrentIngredients(name);
+            currentIngredientService.findCurrentIngredients(name, userId);
+            currentIngredientService.deleteCurrentIngredients(name, userId);
         } catch (IngredientNotFoundException e) { }
         
-        savedIngredientService.deleteSavedIngredient(name);
+        savedIngredientService.deleteSavedIngredient(name, userId);
     }
 }

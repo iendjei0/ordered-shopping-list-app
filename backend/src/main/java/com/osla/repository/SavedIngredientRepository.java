@@ -15,14 +15,16 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface SavedIngredientRepository extends JpaRepository<SavedIngredient, Integer> { 
-    public SavedIngredient findByName(String name);
+    public List<SavedIngredient> findByUserId(int userId);
+    public SavedIngredient findByNameAndUserId(String name, int userId);
 
     @Transactional
     @Query("""
             SELECT COALESCE(MAX(ing.orderValue)+1, 1) 
             FROM SavedIngredient ing
+            WHERE ing.userId = :userId
             """)
-    public int getNextOrder();
+    public int getNextOrder(@Param("userId") int userId);
 
     @Transactional
     @Modifying(clearAutomatically = true)
@@ -36,8 +38,8 @@ public interface SavedIngredientRepository extends JpaRepository<SavedIngredient
     @Query("""
             SELECT ing
             FROM SavedIngredient ing
+            WHERE ing.userId = :userId
             ORDER BY ing.orderValue
             """)
-    public List<SavedIngredient> getOrderedIngredients();
-
+    public List<SavedIngredient> getOrderedIngredients(@Param("userId") int userId);
 }

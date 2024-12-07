@@ -28,11 +28,11 @@ public class CurrentIngredientRepositoryTests {
     @Test
     public void findByName() {
         List<CurrentIngredient> expected = Arrays.asList(CurrentIngredient.builder()
-            .name("milk").count(3).build());
+            .name("milk").count(3).userId(1).build());
 
         currentIngredientRepository.save(expected.get(0));
 
-        List<CurrentIngredient> returned = currentIngredientRepository.findByName("milk");
+        List<CurrentIngredient> returned = currentIngredientRepository.findByNameAndUserId("milk", 1);
 
         assertEquals(expected, returned);
     }
@@ -40,9 +40,9 @@ public class CurrentIngredientRepositoryTests {
     @Test
     public void findByNameNotExist() {
         currentIngredientRepository.save(CurrentIngredient.builder()
-            .name("notmilk").count(3).build());
+            .name("notmilk").count(3).userId(1).build());
 
-        List<CurrentIngredient> returned = currentIngredientRepository.findByName("milk");
+        List<CurrentIngredient> returned = currentIngredientRepository.findByNameAndUserId("milk", 1);
         
         assertEquals(Collections.emptyList(), returned);
     }
@@ -51,34 +51,34 @@ public class CurrentIngredientRepositoryTests {
     public void getSummedOrderedIngredients() {
         List<CurrentIngredient> currentIngredients = Arrays.asList(
             CurrentIngredient.builder()
-                .name("egg").count(3).build(),
+                .name("egg").count(3).userId(1).build(),
             CurrentIngredient.builder()
-                .name("flour").count(1).build(),
+                .name("flour").count(1).userId(1).build(),
             CurrentIngredient.builder()
-                .name("butter").count(3).build(),
+                .name("butter").count(3).userId(1).build(),
             CurrentIngredient.builder()
-                .name("milk").count(2).build(),
+                .name("milk").count(2).userId(1).build(),
             CurrentIngredient.builder()
-                .name("egg").count(7).build()
+                .name("egg").count(7).userId(1).build()
         );
 
         List<SavedIngredient> savedIngredients = Arrays.asList(
             SavedIngredient.builder()
-                .name("milk").orderValue(1).build(),
+                .name("milk").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .name("flour").orderValue(2).build(),
+                .name("flour").orderValue(2).userId(1).build(),
             SavedIngredient.builder()
-                .name("yoghurt").orderValue(3).build(),
+                .name("yoghurt").orderValue(3).userId(1).build(),
             SavedIngredient.builder()
-                .name("butter").orderValue(4).build(),
+                .name("butter").orderValue(4).userId(1).build(),
             SavedIngredient.builder()
-                .name("egg").orderValue(5).build()
+                .name("egg").orderValue(5).userId(1).build()
         );
 
         currentIngredientRepository.saveAll(currentIngredients);
         savedIngredientRepository.saveAll(savedIngredients);
 
-        List<OutputIngredient> returned = currentIngredientRepository.getSummedOrderedIngredients();
+        List<OutputIngredient> returned = currentIngredientRepository.getSummedOrderedIngredients(1);
 
         List<OutputIngredient> expected = Arrays.asList(
             OutputIngredient.builder()
@@ -96,7 +96,6 @@ public class CurrentIngredientRepositoryTests {
 
     @Test
     public void getSummedOrderedIngredientsIfThereAreNone() {
-        assertEquals(Collections.emptyList(), currentIngredientRepository.getSummedOrderedIngredients());
+        assertEquals(Collections.emptyList(), currentIngredientRepository.getSummedOrderedIngredients(1));
     }
-
 }

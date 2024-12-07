@@ -17,15 +17,15 @@ public class SavedIngredientRepositoryTests {
 
     @Autowired
     private SavedIngredientRepository savedIngredientRepository;
-    
+
     @Test
     public void findByName() {
         SavedIngredient expected = SavedIngredient.builder()
-            .name("milk").orderValue(3).build();
+            .name("milk").orderValue(3).userId(1).build();
 
         savedIngredientRepository.save(expected);
 
-        SavedIngredient returned = savedIngredientRepository.findByName("milk");
+        SavedIngredient returned = savedIngredientRepository.findByNameAndUserId("milk", 1);
 
         assertEquals(expected, returned);
     }
@@ -33,9 +33,9 @@ public class SavedIngredientRepositoryTests {
     @Test
     public void findByNameNotExist() {
         savedIngredientRepository.save(SavedIngredient.builder()
-            .name("notmilk").orderValue(3).build());
+            .name("notmilk").orderValue(3).userId(1).build());
 
-        SavedIngredient returned = savedIngredientRepository.findByName("milk");
+        SavedIngredient returned = savedIngredientRepository.findByNameAndUserId("milk", 1);
         
         assertNull(returned);
     }
@@ -44,36 +44,36 @@ public class SavedIngredientRepositoryTests {
     public void getNextOrder() {
         savedIngredientRepository.saveAll(Arrays.asList(
             SavedIngredient.builder()
-                .name("milk").orderValue(1).build(),
+                .name("milk").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .name("flour").orderValue(2).build(),
+                .name("flour").orderValue(2).userId(1).build(),
             SavedIngredient.builder()
-                .name("butter").orderValue(3).build()
+                .name("butter").orderValue(3).userId(1).build()
         ));
         
-        assertEquals(4, savedIngredientRepository.getNextOrder());
+        assertEquals(4, savedIngredientRepository.getNextOrder(1));
     }
 
     @Test
     public void getNextOrderEmptyDatabase() {
-        assertEquals(1, savedIngredientRepository.getNextOrder());
+        assertEquals(1, savedIngredientRepository.getNextOrder(1));
     }
 
     @Test
     public void createRecordsWithGetNextOrder() {
-        int orderValue = savedIngredientRepository.getNextOrder();
+        int orderValue = savedIngredientRepository.getNextOrder(1);
         savedIngredientRepository.save(SavedIngredient.builder()
-            .name("milk").orderValue(orderValue).build());
+            .name("milk").orderValue(orderValue).userId(1).build());
         
-        orderValue = savedIngredientRepository.getNextOrder();
+        orderValue = savedIngredientRepository.getNextOrder(1);
         savedIngredientRepository.save(SavedIngredient.builder()
-            .name("flour").orderValue(orderValue).build());
+            .name("flour").orderValue(orderValue).userId(1).build());
 
-        orderValue = savedIngredientRepository.getNextOrder();
+        orderValue = savedIngredientRepository.getNextOrder(1);
         savedIngredientRepository.save(SavedIngredient.builder()
-            .name("butter").orderValue(orderValue).build());
+            .name("butter").orderValue(orderValue).userId(1).build());
 
-        List<SavedIngredient> savedIngredients = savedIngredientRepository.findAll();
+        List<SavedIngredient> savedIngredients = savedIngredientRepository.findByUserId(1);
         for(int i = 0; i < savedIngredients.size(); i++) {
             assertEquals(i+1, savedIngredients.get(i).getOrderValue());
         }
@@ -83,24 +83,22 @@ public class SavedIngredientRepositoryTests {
     public void decrementOrderHigherThan() {
         List<SavedIngredient> savedIngredients = Arrays.asList(
             SavedIngredient.builder()
-                .name("milk").orderValue(1).build(),
+                .name("milk").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .name("flour").orderValue(2).build(),
+                .name("flour").orderValue(2).userId(1).build(),
             SavedIngredient.builder()
-                .name("butter").orderValue(3).build(),
+                .name("butter").orderValue(3).userId(1).build(),
             SavedIngredient.builder()
-                .name("egg").orderValue(4).build()
+                .name("egg").orderValue(4).userId(1).build()
         );
         savedIngredientRepository.saveAll(savedIngredients);
 
         savedIngredientRepository.decrementOrderHigherThan(2);
-        
-        List<SavedIngredient> updatedIngredients = savedIngredientRepository.findAll();
-        //Unchanged
+
+        List<SavedIngredient> updatedIngredients = savedIngredientRepository.findByUserId(1);
         for(int i = 0; i < 2; i++) {
             assertEquals(savedIngredients.get(i).getOrderValue(), updatedIngredients.get(i).getOrderValue());
         }
-        //Decremented
         for(int i = 2; i < updatedIngredients.size(); i++) {
             assertEquals(savedIngredients.get(i).getOrderValue(), updatedIngredients.get(i).getOrderValue()+1);
         }
@@ -110,19 +108,19 @@ public class SavedIngredientRepositoryTests {
     public void decrementOrderHigherThan0() {
         List<SavedIngredient> savedIngredients = Arrays.asList(
             SavedIngredient.builder()
-                .name("milk").orderValue(1).build(),
+                .name("milk").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .name("flour").orderValue(2).build(),
+                .name("flour").orderValue(2).userId(1).build(),
             SavedIngredient.builder()
-                .name("butter").orderValue(3).build(),
+                .name("butter").orderValue(3).userId(1).build(),
             SavedIngredient.builder()
-                .name("egg").orderValue(4).build()
+                .name("egg").orderValue(4).userId(1).build()
         );
         savedIngredientRepository.saveAll(savedIngredients);
 
         savedIngredientRepository.decrementOrderHigherThan(0);
-        
-        List<SavedIngredient> updatedIngredients = savedIngredientRepository.findAll();
+
+        List<SavedIngredient> updatedIngredients = savedIngredientRepository.findByUserId(1);
         for(int i = 0; i < updatedIngredients.size(); i++) {
             assertEquals(savedIngredients.get(i).getOrderValue(), updatedIngredients.get(i).getOrderValue()+1);
         }
@@ -132,23 +130,22 @@ public class SavedIngredientRepositoryTests {
     public void getOrderedIngredients() {
         List<SavedIngredient> savedIngredients = Arrays.asList(
             SavedIngredient.builder()
-                .name("milk").orderValue(3).build(),
+                .name("milk").orderValue(3).userId(1).build(),
             SavedIngredient.builder()
-                .name("flour").orderValue(1).build(),
+                .name("flour").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .name("butter").orderValue(4).build(),
+                .name("butter").orderValue(4).userId(1).build(),
             SavedIngredient.builder()
-                .name("egg").orderValue(2).build()
+                .name("egg").orderValue(2).userId(1).build()
         );
         savedIngredientRepository.saveAll(savedIngredients);
 
-        List<SavedIngredient> orderIngredients = savedIngredientRepository.getOrderedIngredients();
+        List<SavedIngredient> orderedIngredients = savedIngredientRepository.getOrderedIngredients(1);
 
         String[] namesOrdered = {"flour", "egg", "milk", "butter"};
 
-        for(int i = 0; i < orderIngredients.size(); i++) {
-            assertEquals(namesOrdered[i], orderIngredients.get(i).getName());
+        for(int i = 0; i < orderedIngredients.size(); i++) {
+            assertEquals(namesOrdered[i], orderedIngredients.get(i).getName());
         }
     }
-    
 }

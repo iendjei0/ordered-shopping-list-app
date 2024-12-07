@@ -26,10 +26,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
+
     public User getUser(int id) {
         Optional<User> user = userRepository.findById(id);
         if(!user.isPresent()) throw new UserNotFoundException("Couldn't find user with id " + id);
         return user.get();
+    }
+
+    public User getUser(String username) {
+        User user = userRepository.findByUsername(username);
+        return user;
     }
 
     @Transactional

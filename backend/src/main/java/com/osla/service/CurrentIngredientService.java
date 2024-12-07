@@ -18,43 +18,44 @@ public class CurrentIngredientService {
     @Autowired
     private CurrentIngredientRepository currentIngredientRepository;
 
-    public List<CurrentIngredient> getCurrentIngredients() {
-        return currentIngredientRepository.findAll();
+    public List<CurrentIngredient> getCurrentIngredients(int userId) {
+        return currentIngredientRepository.findAllByUserId(userId);
     }
 
-    public List<CurrentIngredient> findCurrentIngredients(String name) {
-        List<CurrentIngredient> ingredients = currentIngredientRepository.findByName(name);
+    public List<CurrentIngredient> findCurrentIngredients(String name, int userId) {
+        List<CurrentIngredient> ingredients = currentIngredientRepository.findByNameAndUserId(name, userId);
         if(ingredients.isEmpty()) throw new IngredientNotFoundException("Couldn't find ingredient \"" + name + "\"");
         return ingredients;
     }
 
-    public CurrentIngredient findCurrentIngredient(int id) {
-        Optional<CurrentIngredient> ingredient = currentIngredientRepository.findById(id);
-        if(!ingredient.isPresent()) throw new IngredientNotFoundException("Couldn't find ingredient \"" + id + "\"");
-        return ingredient.get();
+    public CurrentIngredient findCurrentIngredient(int id, int userId) {
+        CurrentIngredient ingredient = currentIngredientRepository.findByIdAndUserId(id, userId);
+        if(ingredient == null) throw new IngredientNotFoundException("Couldn't find ingredient \"" + id + "\"");
+        return ingredient;
     } 
 
     @Transactional
-    public void addCurrentIngredient(String name) {
+    public void addCurrentIngredient(String name, int userId) {
         currentIngredientRepository.save(
             CurrentIngredient.builder()
                 .name(name)
-                .count(1).build());
+                .count(1)
+                .userId(userId).build());
     }
 
     @Transactional
-    public void deleteCurrentIngredients(String name) {
-        currentIngredientRepository.deleteAll(findCurrentIngredients(name));
+    public void deleteCurrentIngredients(String name, int userId) {
+        currentIngredientRepository.deleteAll(findCurrentIngredients(name, userId));
     }
 
     @Transactional
-    public void deleteCurrentIngredient(int id) {
+    public void deleteCurrentIngredient(int id, int userId) {
         currentIngredientRepository.deleteById(id);
     }
 
     @Transactional
-    public void incrementCurrentIngredient(int id) {
-        CurrentIngredient ingredient = findCurrentIngredient(id);
+    public void incrementCurrentIngredient(int id, int userId) {
+        CurrentIngredient ingredient = findCurrentIngredient(id, userId);
         int count = ingredient.getCount();
         if(count == Integer.MAX_VALUE) return;
         ingredient.setCount(++count);
@@ -63,8 +64,8 @@ public class CurrentIngredientService {
     }
     
     @Transactional
-    public void decrementCurrentIngredient(int id) {
-        CurrentIngredient ingredient = findCurrentIngredient(id);
+    public void decrementCurrentIngredient(int id, int userId) {
+        CurrentIngredient ingredient = findCurrentIngredient(id, userId);
         int count = ingredient.getCount();
         ingredient.setCount(--count);
 
@@ -75,7 +76,7 @@ public class CurrentIngredientService {
         }
     }
     
-    public List<OutputIngredient> getSummedOrderedIngredients() {
-        return currentIngredientRepository.getSummedOrderedIngredients();
+    public List<OutputIngredient> getSummedOrderedIngredients(int userId) {
+        return currentIngredientRepository.getSummedOrderedIngredients(userId);
     }
 }

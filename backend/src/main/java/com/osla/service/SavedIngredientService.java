@@ -17,37 +17,38 @@ public class SavedIngredientService {
     @Autowired
     private SavedIngredientRepository savedIngredientRepository;
 
-    public List<SavedIngredient> getSavedIngredients() {
-        return savedIngredientRepository.findAll();
+    public List<SavedIngredient> getSavedIngredients(int userId) {
+        return savedIngredientRepository.findByUserId(userId);
     }
 
-    public SavedIngredient findSavedIngredient(String name) {
-        SavedIngredient ingredient = savedIngredientRepository.findByName(name);
+    public SavedIngredient findSavedIngredient(String name, int userId) {
+        SavedIngredient ingredient = savedIngredientRepository.findByNameAndUserId(name, userId);
         if(ingredient == null) throw new IngredientNotFoundException("Couldn't find ingredient \"" + name + "\"");
         return ingredient;
     }
 
     @Transactional
-    public void addSavedIngredient(String name) {
+    public void addSavedIngredient(String name, int userId) {
         savedIngredientRepository.save(SavedIngredient.builder()
             .name(name)
-            .orderValue(savedIngredientRepository.getNextOrder())
+            .orderValue(savedIngredientRepository.getNextOrder(userId))
+            .userId(userId)
             .build()
         );
     }
 
     @Transactional
-    public void deleteSavedIngredient(String name) {
-        SavedIngredient ingredientToDelete = findSavedIngredient(name);
+    public void deleteSavedIngredient(String name, int userId) {
+        SavedIngredient ingredientToDelete = findSavedIngredient(name, userId);
 
         savedIngredientRepository.deleteById(ingredientToDelete.getId());
         savedIngredientRepository.decrementOrderHigherThan(ingredientToDelete.getOrderValue());
     }
     
     @Transactional
-    public void swapIngredientOrder(String name1, String name2) {
-        SavedIngredient ingredient1 = findSavedIngredient(name1);
-        SavedIngredient ingredient2 = findSavedIngredient(name2);
+    public void swapIngredientOrder(String name1, String name2, int userId) {
+        SavedIngredient ingredient1 = findSavedIngredient(name1, userId);
+        SavedIngredient ingredient2 = findSavedIngredient(name2, userId);
 
         int order1 = ingredient1.getOrderValue();
         int order2 = ingredient2.getOrderValue();
@@ -59,7 +60,7 @@ public class SavedIngredientService {
         savedIngredientRepository.save(ingredient2);
     }
 
-    public List<SavedIngredient> getOrderedIngredients() {
-        return savedIngredientRepository.getOrderedIngredients();
+    public List<SavedIngredient> getOrderedIngredients(int userId) {
+        return savedIngredientRepository.getOrderedIngredients(userId);
     }
 }

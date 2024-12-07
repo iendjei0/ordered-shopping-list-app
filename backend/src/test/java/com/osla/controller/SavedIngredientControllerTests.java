@@ -13,10 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -36,7 +38,7 @@ import com.osla.service.SavedIngredientService;
 @WebMvcTest(SavedIngredientController.class)
 @TestInstance(Lifecycle.PER_CLASS)
 public class SavedIngredientControllerTests {
-    
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -51,29 +53,32 @@ public class SavedIngredientControllerTests {
 
     private List<SavedIngredient> savedIngredients;
     private List<SavedIngredient> orderedIngredients;
+    private String auth;
 
     @BeforeAll
     public void initMocks() {
+        auth = "Basic " + Base64.getEncoder().encodeToString("iendjei:test".getBytes());
+
         savedIngredients = Arrays.asList(
             SavedIngredient.builder()
-                .id(1).name("egg").orderValue(3).build(),
+                .id(1).name("egg").orderValue(3).userId(1).build(),
             SavedIngredient.builder()
-                .id(2).name("flour").orderValue(1).build(),
+                .id(2).name("flour").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .id(3).name("milk").orderValue(2).build()
+                .id(3).name("milk").orderValue(2).userId(1).build()
         );
 
         orderedIngredients = Arrays.asList(
             SavedIngredient.builder()
-                .id(2).name("flour").orderValue(1).build(),
+                .id(2).name("flour").orderValue(1).userId(1).build(),
             SavedIngredient.builder()
-                .id(3).name("milk").orderValue(2).build(),
+                .id(3).name("milk").orderValue(2).userId(1).build(),
             SavedIngredient.builder()
-                .id(1).name("egg").orderValue(3).build()
+                .id(1).name("egg").orderValue(3).userId(1).build()
         );
 
-        given(savedIngredientService.getSavedIngredients()).willReturn(savedIngredients);
-        given(savedIngredientService.getOrderedIngredients()).willReturn(orderedIngredients);
+        given(savedIngredientService.getSavedIngredients(1)).willReturn(savedIngredients);
+        given(savedIngredientService.getOrderedIngredients(1)).willReturn(orderedIngredients);
     }
 
     private void assertJsonContent(MvcResult result) throws Exception {
@@ -86,15 +91,16 @@ public class SavedIngredientControllerTests {
     @Test
     public void getSavedIngredientsAndIngredientsOrder() throws Exception {
         MvcResult result = mockMvc.perform(get("/saved")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
         
         assertJsonContent(result);
 
-        verify(savedIngredientService).getSavedIngredients();
-        verify(savedIngredientService).getOrderedIngredients();
+        verify(savedIngredientService).getSavedIngredients(1);
+        verify(savedIngredientService).getOrderedIngredients(1);
     }
 
     @Test
@@ -115,12 +121,12 @@ public class SavedIngredientControllerTests {
             SavedIngredient.builder().id(4).name("butter").orderValue(4).build()
         );
 
-        // Mocking service responses after adding
-        given(savedIngredientService.getSavedIngredients()).willReturn(updatedSavedIngredients);
-        given(savedIngredientService.getOrderedIngredients()).willReturn(updatedOrderedIngredients);
+        given(savedIngredientService.getSavedIngredients(1)).willReturn(updatedSavedIngredients);
+        given(savedIngredientService.getOrderedIngredients(1)).willReturn(updatedOrderedIngredients);
 
         MvcResult result = mockMvc.perform(post("/saved/add/" + newIngredientName)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -130,7 +136,6 @@ public class SavedIngredientControllerTests {
         assertTrue(json.has("savedIngredients"));
         assertTrue(json.has("ingredientOrder"));
 
-        // Deserialize JSON arrays
         List<SavedIngredient> responseSavedIngredients = objectMapper.convertValue(
             json.get("savedIngredients"),
             objectMapper.getTypeFactory().constructCollectionType(List.class, SavedIngredient.class)
@@ -141,14 +146,12 @@ public class SavedIngredientControllerTests {
             objectMapper.getTypeFactory().constructCollectionType(List.class, SavedIngredient.class)
         );
 
-        // Assert that "butter" is added
         assertTrue(responseSavedIngredients.stream().anyMatch(i -> i.getName().equals("butter")));
         assertTrue(responseOrderedIngredients.stream().anyMatch(i -> i.getName().equals("butter")));
 
-        // Verify service interactions
-        verify(savedIngredientService).addSavedIngredient(newIngredientName);
-        verify(savedIngredientService).getSavedIngredients();
-        verify(savedIngredientService).getOrderedIngredients();
+        verify(savedIngredientService).addSavedIngredient(newIngredientName, 1);
+        verify(savedIngredientService).getSavedIngredients(1);
+        verify(savedIngredientService).getOrderedIngredients(1);
     }
 
     @Test
@@ -165,11 +168,12 @@ public class SavedIngredientControllerTests {
             SavedIngredient.builder().id(1).name("egg").orderValue(3).build()
         );
 
-        given(savedIngredientService.getSavedIngredients()).willReturn(updatedSavedIngredients);
-        given(savedIngredientService.getOrderedIngredients()).willReturn(updatedOrderedIngredients);
+        given(savedIngredientService.getSavedIngredients(1)).willReturn(updatedSavedIngredients);
+        given(savedIngredientService.getOrderedIngredients(1)).willReturn(updatedOrderedIngredients);
 
         MvcResult result = mockMvc.perform(delete("/saved/delete/" + ingredientToDelete)
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -192,9 +196,9 @@ public class SavedIngredientControllerTests {
         assertFalse(responseSavedIngredients.stream().anyMatch(i -> i.getName().equals("milk")));
         assertFalse(responseOrderedIngredients.stream().anyMatch(i -> i.getName().equals("milk")));
 
-        verify(ingredientManagementService).deleteIngredient(ingredientToDelete);
-        verify(savedIngredientService).getSavedIngredients();
-        verify(savedIngredientService).getOrderedIngredients();
+        verify(ingredientManagementService).deleteIngredient(ingredientToDelete, 1);
+        verify(savedIngredientService).getSavedIngredients(1);
+        verify(savedIngredientService).getOrderedIngredients(1);
     }
 
     @Test
@@ -208,8 +212,8 @@ public class SavedIngredientControllerTests {
             SavedIngredient.builder().id(3).name("milk").orderValue(3).build()
         );
 
-        given(savedIngredientService.getSavedIngredients()).willReturn(savedIngredients); // Assuming savedIngredients remain unchanged
-        given(savedIngredientService.getOrderedIngredients()).willReturn(swappedOrderedIngredients);
+        given(savedIngredientService.getSavedIngredients(1)).willReturn(savedIngredients);
+        given(savedIngredientService.getOrderedIngredients(1)).willReturn(swappedOrderedIngredients);
 
         String swapPayload = objectMapper.writeValueAsString(
             Map.of("name1", name1, "name2", name2)
@@ -220,6 +224,7 @@ public class SavedIngredientControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(swapPayload)
                 .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth)
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -245,8 +250,8 @@ public class SavedIngredientControllerTests {
         assertEquals(2, responseOrderedIngredients.get(1).getOrderValue());
         assertEquals("flour", responseOrderedIngredients.get(1).getName());
 
-        verify(savedIngredientService).swapIngredientOrder(name1, name2);
-        verify(savedIngredientService).getSavedIngredients();
-        verify(savedIngredientService).getOrderedIngredients();
+        verify(savedIngredientService).swapIngredientOrder(name1, name2, 1);
+        verify(savedIngredientService).getSavedIngredients(1);
+        verify(savedIngredientService).getOrderedIngredients(1);
     }
 }

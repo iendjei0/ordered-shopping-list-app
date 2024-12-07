@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,27 +49,30 @@ public class CurrentIngredientControllerTests {
     @MockBean
     private IngredientManagementService ingredientManagementService;
 
-
     private List<CurrentIngredient> currentIngredients;
+    private String auth;
 
     @BeforeEach
     public void initMocks() {
+        auth = "Basic " + Base64.getEncoder().encodeToString("iendjei:test".getBytes());
+
         currentIngredients = Arrays.asList(
             CurrentIngredient.builder()
-                .id(1).name("egg").count(3).build(),
+                .id(1).name("egg").count(3).userId(1).build(),
             CurrentIngredient.builder()
-                .id(2).name("flour").count(2).build(),
+                .id(2).name("flour").count(2).userId(1).build(),
             CurrentIngredient.builder()
-                .id(3).name("milk").count(5).build()
+                .id(3).name("milk").count(5).userId(1).build()
         );
 
-        given(currentIngredientService.getCurrentIngredients()).willReturn(currentIngredients);
+        given(currentIngredientService.getCurrentIngredients(1)).willReturn(currentIngredients);
     }
 
     @Test
     public void getCurrentIngredientsEndpoint() throws Exception {
         MvcResult result = mockMvc.perform(get("/current")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -76,13 +80,14 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).getCurrentIngredients();
+        verify(currentIngredientService).getCurrentIngredients(1);
     }
 
     @Test
     public void addCurrentIngredientEndpoint() throws Exception {
         MvcResult result = mockMvc.perform(post("/current/add/milk")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -90,13 +95,14 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(ingredientManagementService).addIngredient("milk");
+        verify(ingredientManagementService).addIngredient("milk", 1);
     }
 
     @Test
     public void incrementCurrentIngredientEndpoint() throws Exception {
         MvcResult result = mockMvc.perform(put("/current/increment/17")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -104,13 +110,14 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).incrementCurrentIngredient(17);
+        verify(currentIngredientService).incrementCurrentIngredient(17, 1);
     }
 
     @Test
     public void decrementCurrentIngredientEndpoint() throws Exception {
         MvcResult result = mockMvc.perform(put("/current/decrement/17")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -118,7 +125,7 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).decrementCurrentIngredient(17);
+        verify(currentIngredientService).decrementCurrentIngredient(17, 1);
     }
 
     @Test
@@ -129,10 +136,11 @@ public class CurrentIngredientControllerTests {
             new OutputIngredient("milk", 5)
         );
 
-        given(currentIngredientService.getSummedOrderedIngredients()).willReturn(outputIngredients);
+        given(currentIngredientService.getSummedOrderedIngredients(1)).willReturn(outputIngredients);
 
         MvcResult result = mockMvc.perform(get("/current/processed")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
@@ -140,6 +148,6 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(outputIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).getSummedOrderedIngredients();
+        verify(currentIngredientService).getSummedOrderedIngredients(1);
     }
 }

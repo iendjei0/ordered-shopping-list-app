@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,120 +27,117 @@ import com.osla.repository.CurrentIngredientRepository;
 public class CurrentIngredientServiceTests {
 
     @MockBean
-	private CurrentIngredientRepository currentIngredientRepository;
+    private CurrentIngredientRepository currentIngredientRepository;
 
-	@Autowired
-	public CurrentIngredientService currentIngredientService;
+    @Autowired
+    private CurrentIngredientService currentIngredientService;
 
-	@Test
-	public void getCurrentIngredients() {
-		List<CurrentIngredient> currentIngredients = Arrays.asList(
-			CurrentIngredient.builder()
-				.id(1).name("egg").count(3).build(),
-			CurrentIngredient.builder()
-				.id(2).name("flour").count(2).build(),
-			CurrentIngredient.builder()
-				.id(3).name("milk").count(5).build()
-		);
+    @Test
+    public void getCurrentIngredients() {
+        List<CurrentIngredient> currentIngredients = Arrays.asList(
+            CurrentIngredient.builder()
+                .id(1).name("egg").count(3).userId(1).build(),
+            CurrentIngredient.builder()
+                .id(2).name("flour").count(2).userId(1).build(),
+            CurrentIngredient.builder()
+                .id(3).name("milk").count(5).userId(1).build()
+        );
 
-		given(currentIngredientRepository.findAll()).willReturn(currentIngredients);
+        given(currentIngredientRepository.findAllByUserId(1)).willReturn(currentIngredients);
 
-		List<CurrentIngredient> currentIngredients2 = currentIngredientService.getCurrentIngredients();
+        List<CurrentIngredient> currentIngredients2 = currentIngredientService.getCurrentIngredients(1);
 
-		assertTrue(currentIngredientsAreEqual(currentIngredients, currentIngredients2));
-	}
+        assertTrue(currentIngredientsAreEqual(currentIngredients, currentIngredients2));
+    }
 
-	private boolean currentIngredientsAreEqual(List<CurrentIngredient> list1, List<CurrentIngredient> list2) {
-		if(list1.size() != list2.size()) return false;
-		for(int i = 0; i < list1.size(); i++) {
-			CurrentIngredient a = list1.get(i);
-			CurrentIngredient b = list2.get(i);
-			if(!a.toString().equals(b.toString())) return false;
-		}
-		return true;
-	}
+    private boolean currentIngredientsAreEqual(List<CurrentIngredient> list1, List<CurrentIngredient> list2) {
+        if (list1.size() != list2.size()) return false;
+        for (int i = 0; i < list1.size(); i++) {
+            CurrentIngredient a = list1.get(i);
+            CurrentIngredient b = list2.get(i);
+            if (!a.toString().equals(b.toString())) return false;
+        }
+        return true;
+    }
 
-	@Test
-	public void getCurrentIngredientsIfThereAreNone() {
-		given(currentIngredientRepository.findAll()).willReturn(Collections.emptyList());
+    @Test
+    public void getCurrentIngredientsIfThereAreNone() {
+        given(currentIngredientRepository.findAllByUserId(1)).willReturn(Collections.emptyList());
 
-		assertEquals(Collections.emptyList(), currentIngredientService.getCurrentIngredients());
-	}
+        assertEquals(Collections.emptyList(), currentIngredientService.getCurrentIngredients(1));
+    }
 
-	@Test
-	public void findCurrentIngredient() {
-		given(currentIngredientRepository.findByName("milk")).willReturn(mock(List.class));
+    @Test
+    public void findCurrentIngredient() {
+        given(currentIngredientRepository.findByNameAndUserId("milk", 1)).willReturn(mock(List.class));
 
-		currentIngredientService.findCurrentIngredients("milk");
+        currentIngredientService.findCurrentIngredients("milk", 1);
 
-		verify(currentIngredientRepository).findByName("milk");
-	}
+        verify(currentIngredientRepository).findByNameAndUserId("milk", 1);
+    }
 
-	@Test
-	public void findCurrentIngredientNotExisting() {
-		given(currentIngredientRepository.findByName("milk")).willThrow(IngredientNotFoundException.class);
+    @Test
+    public void findCurrentIngredientNotExisting() {
+        given(currentIngredientRepository.findByNameAndUserId("milk", 1)).willThrow(IngredientNotFoundException.class);
 
-		assertThrows(IngredientNotFoundException.class, () -> {
-			currentIngredientService.findCurrentIngredients("milk");
-		});
+        assertThrows(IngredientNotFoundException.class, () -> {
+            currentIngredientService.findCurrentIngredients("milk", 1);
+        });
 
-		verify(currentIngredientRepository).findByName("milk");
-	}
+        verify(currentIngredientRepository).findByNameAndUserId("milk", 1);
+    }
 
-	@Test
-	public void addCurrentIngredient() {
-		currentIngredientService.addCurrentIngredient("milk");
+    @Test
+    public void addCurrentIngredient() {
+        currentIngredientService.addCurrentIngredient("milk", 1);
 
-		verify(currentIngredientRepository).save(
-			argThat(someIngredient -> 
-				someIngredient.getName().equals("milk") &&
-				someIngredient.getCount() == 1)
-		);
-	}
+        verify(currentIngredientRepository).save(
+            argThat(someIngredient -> 
+                someIngredient.getName().equals("milk") &&
+                someIngredient.getCount() == 1 &&
+                someIngredient.getUserId() == 1)
+        );
+    }
 
-	@Test
-	public void deleteCurrentIngredient() {
-		currentIngredientService.deleteCurrentIngredient(17);
+    @Test
+    public void deleteCurrentIngredient() {
+        currentIngredientService.deleteCurrentIngredient(17, 1);
 
-		verify(currentIngredientRepository).deleteById(17);
-	}
+        verify(currentIngredientRepository).deleteById(17);
+    }
 
-	@Test
-	public void incrementCurrentIngredient() {
-		given(currentIngredientRepository.findById(17))
-			.willReturn(Optional.of(CurrentIngredient.builder()
-				.id(17).name("milk").count(1).build()
-			));
+    @Test
+    public void incrementCurrentIngredient() {
+        given(currentIngredientRepository.findByIdAndUserId(17, 1))
+            .willReturn(CurrentIngredient.builder().id(17).name("milk").count(1).userId(1).build());
 
-		int previousCount = currentIngredientRepository.findById(17).get().getCount();
+        int previousCount = currentIngredientRepository.findByIdAndUserId(17, 1).getCount();
 
-		currentIngredientService.incrementCurrentIngredient(17);
+        currentIngredientService.incrementCurrentIngredient(17, 1);
 
-		verify(currentIngredientRepository).save(
-			argThat(someIngredient -> someIngredient.getCount() == previousCount+1)
-		);
-	}
+        verify(currentIngredientRepository).save(
+            argThat(someIngredient -> someIngredient.getCount() == previousCount + 1)
+        );
+    }
 
-	@Test
-	public void decrementCurrentIngredient() {
-		given(currentIngredientRepository.findById(17))
-			.willReturn(Optional.of(CurrentIngredient.builder()
-				.id(17).name("milk").count(3).build()
-			));
+    @Test
+    public void decrementCurrentIngredient() {
+        given(currentIngredientRepository.findByIdAndUserId(17, 1))
+            .willReturn(CurrentIngredient.builder().id(17).name("milk").count(3).userId(1).build());
 
-		int previousCount = currentIngredientRepository.findById(17).get().getCount();
+        int previousCount = currentIngredientRepository.findByIdAndUserId(17, 1).getCount();
 
-		currentIngredientService.decrementCurrentIngredient(17);
+        currentIngredientService.decrementCurrentIngredient(17, 1);
 
-		verify(currentIngredientRepository).save(
-			argThat(someIngredient -> someIngredient.getCount() == previousCount-1)
-		);
-	}
+        verify(currentIngredientRepository).save(
+            argThat(someIngredient -> someIngredient.getCount() == previousCount - 1)
+        );
+    }
 
-	@Test
-	public void getSummedOrderedIngredients() {
-		currentIngredientService.getSummedOrderedIngredients();
+    @Test
+    public void getSummedOrderedIngredients() {
+        currentIngredientService.getSummedOrderedIngredients(1);
 
-		verify(currentIngredientRepository).getSummedOrderedIngredients();
-	}
+        verify(currentIngredientRepository).getSummedOrderedIngredients(1);
+    }
 }

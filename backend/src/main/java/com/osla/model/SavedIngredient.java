@@ -23,4 +23,5 @@ public class SavedIngredient {
     private int id;
     private String name;
     private int orderValue;
+    private int userId;
 }
