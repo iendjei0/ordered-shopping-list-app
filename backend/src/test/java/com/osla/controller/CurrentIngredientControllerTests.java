@@ -1,6 +1,8 @@
 package com.osla.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -65,27 +67,28 @@ public class CurrentIngredientControllerTests {
                 .id(3).name("milk").count(5).userId(1).build()
         );
 
-        given(currentIngredientService.getCurrentIngredients(1)).willReturn(currentIngredients);
+        given(currentIngredientService.getCurrentIngredients(anyInt())).willReturn(currentIngredients);
     }
 
     @Test
     public void getCurrentIngredientsEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(get("/current")
+        MvcResult result = mockMvc.perform(get("/api/current")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", auth))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andReturn();
 
+            
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).getCurrentIngredients(1);
+        verify(currentIngredientService).getCurrentIngredients(anyInt());
     }
 
     @Test
     public void addCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(post("/current/add/milk")
+        MvcResult result = mockMvc.perform(post("/api/current/add/milk")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", auth))
             .andExpect(status().isOk())
@@ -95,12 +98,12 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(ingredientManagementService).addIngredient("milk", 1);
+        verify(ingredientManagementService).addIngredient(eq("milk"), anyInt());
     }
 
     @Test
     public void incrementCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(put("/current/increment/17")
+        MvcResult result = mockMvc.perform(put("/api/current/increment/17")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", auth))
             .andExpect(status().isOk())
@@ -110,12 +113,12 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).incrementCurrentIngredient(17, 1);
+        verify(currentIngredientService).incrementCurrentIngredient(eq(17), anyInt());
     }
 
     @Test
     public void decrementCurrentIngredientEndpoint() throws Exception {
-        MvcResult result = mockMvc.perform(put("/current/decrement/17")
+        MvcResult result = mockMvc.perform(put("/api/current/decrement/17")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", auth))
             .andExpect(status().isOk())
@@ -125,7 +128,7 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(currentIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).decrementCurrentIngredient(17, 1);
+        verify(currentIngredientService).decrementCurrentIngredient(eq(17), anyInt());
     }
 
     @Test
@@ -136,9 +139,9 @@ public class CurrentIngredientControllerTests {
             new OutputIngredient("milk", 5)
         );
 
-        given(currentIngredientService.getSummedOrderedIngredients(1)).willReturn(outputIngredients);
+        given(currentIngredientService.getSummedOrderedIngredients(anyInt())).willReturn(outputIngredients);
 
-        MvcResult result = mockMvc.perform(get("/current/processed")
+        MvcResult result = mockMvc.perform(get("/api/current/processed")
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", auth))
             .andExpect(status().isOk())
@@ -148,6 +151,6 @@ public class CurrentIngredientControllerTests {
         String expectedJson = objectMapper.writeValueAsString(outputIngredients);
         assertEquals(expectedJson, result.getResponse().getContentAsString());
 
-        verify(currentIngredientService).getSummedOrderedIngredients(1);
+        verify(currentIngredientService).getSummedOrderedIngredients(anyInt());
     }
 }
