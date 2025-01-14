@@ -21,7 +21,7 @@ public interface CurrentIngredientRepository extends JpaRepository<CurrentIngred
             SELECT new com.osla.model.OutputIngredient(ci.name, SUM(ci.count))
             FROM CurrentIngredient ci
             JOIN SavedIngredient si ON ci.name=si.name
-            WHERE ci.userId = :userId
+            WHERE ci.userId = :userId AND si.userId = :userId
             GROUP BY ci.name, si.orderValue
             ORDER BY si.orderValue
             """)
